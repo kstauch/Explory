@@ -1,0 +1,42 @@
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+# Ignored default folder with query files
+/queries/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+
+### PyCharm
+.idea/
+*.iml
+out/
+gen/
+
+### Python / Django ###
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+db.sqlite3
+local_settings.py
+*.log
+
+### Node / React ###
+node_modules/
+dist/
+build/
+.eslintcache
+.stylelintcache
+
+### System Files ###
+.DS_Store
+Thumbs.db
+
+### Environment Variables ###
+.env
