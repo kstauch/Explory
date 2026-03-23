@@ -5,8 +5,21 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Posts list</h1>
-    <p> hmmm</p>
-    <p>okay go back <a href =/homepage/>home</a></p>
+    <section>
+        <h1>Posts list</h1>
+        <p> hmmm</p>
+        <p>okay go back <a href =/homepage/>home</a></p>
+        {% for post in posts %}
+            <article>
+            <h2>
+                <a href = "{% url 'posts:page' slug=post.slug %}">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <p>{{ post.date }}</p>
+            <p>{{ post.body }}</p>
+            </article>
+        {% endfor %}
+    </section>
 {% endblock %}
 
