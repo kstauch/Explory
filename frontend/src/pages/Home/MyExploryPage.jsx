@@ -1,0 +1,18 @@
+import { useNavigate } from "react-router-dom";
+import "./MyExploryPage.css";
+
+function MyExploryPage() {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <h1>My Explory Archive</h1>
+
+      <button onClick={() => navigate("/")}>
+        Home
+      </button>
+    </div>
+  );
+}
+
+export default MyExploryPage;

@@ -23,6 +23,7 @@ urlpatterns = [
     path('',views.homepage),
     path('about/', views.about),
     path('homepage/', views.homepage),
+    path('api/test/', views.test_api),
     path('posts/', include('posts.urls')),
 
 
