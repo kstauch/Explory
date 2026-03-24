@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Home
 import HomePage from "./pages/Home/HomePage";
 import MyExploryPage from "./pages/Home/MyExploryPage";
+import Login from "./pages/Home/Login";
 
 // Challenge
 import ChallengePage from "./pages/Challenge/ChallengePage";
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         {/* Home */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Challenge Flow */}
         <Route path="/challenge" element={<ChallengePage />} />
