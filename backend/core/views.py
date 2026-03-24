@@ -2,19 +2,15 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-
 from .serializers import UserSerializer
 from django.contrib.auth import get_user_model
-
+from django.http import JsonResponse
 User = get_user_model()
 
 def homepage(request):
     return render(request, 'home.html')
 def about(request):
     return render(request, 'challenge.html')
-
-from django.http import JsonResponse
-
 def test_api(request):
     return JsonResponse({"message": "Backend is working"})
 

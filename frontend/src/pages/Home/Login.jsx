@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
+import {useNavigate} from "react-router-dom";
+
 
 export default function Login() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -24,10 +27,15 @@ export default function Login() {
 
     return (
     <div>
-      <input placeholder="Username" onChange={e => setUsername(e.target.value)} />
-      <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)} />
-      {error && <p>{error}</p>}
-      <button onClick={handleRegister}>Register</button>
+        <h1>Login</h1>
+        <button onClick={() => navigate("/")}>
+            Home
+        </button>
+        <hr/>
+        <input placeholder="Username" onChange={e => setUsername(e.target.value)} />
+        <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)} />
+        {error && <p>{error}</p>}
+        <button onClick={handleRegister}>Register</button>
     </div>
   );
 }

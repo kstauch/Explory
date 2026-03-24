@@ -23,6 +23,10 @@ function HomePage() {
       <button onClick={() => navigate("/leaderboard")}>
         Leaderboard
       </button>
+
+        <button onClick={() => navigate("/login")}>
+            Login
+        </button>
     </div>
   );
 }
