@@ -50,5 +50,5 @@ class LoginView(generics.GenericAPIView):
             }, status=200)
         else:
             return JsonResponse({
-                "error": "Invalid credentials"
+                "error": "Incorrect Username or Password"
             }, status=400)
