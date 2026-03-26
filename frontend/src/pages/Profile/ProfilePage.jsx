@@ -16,7 +16,7 @@ function ProfilePage() {
         Personalization
       </button>
 
-      <button onClick={() => navigate("/")}>
+      <button onClick={() => navigate("/home")}>
         Home
       </button>
     </div>

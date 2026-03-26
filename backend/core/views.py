@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
+from django.contrib.auth import authenticate
 User = get_user_model()
 
 def homepage(request):
@@ -28,3 +29,26 @@ class UserViewer(generics.CreateAPIView):
             'user' : serializer.data,
             'token': token.key,
         }, status=201)
+    
+class LoginView(generics.GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            token, _ = Token.objects.get_or_create(user=user)
+            return JsonResponse({
+                "user": {
+                    "id": user.id,
+                    "username": user.username
+                },
+                "token": token.key
+            }, status=200)
+        else:
+            return JsonResponse({
+                "error": "Invalid credentials"
+            }, status=400)

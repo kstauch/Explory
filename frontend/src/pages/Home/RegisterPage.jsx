@@ -2,7 +2,7 @@ import { useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 
-export default function Login() {
+export default function RegisterPage() {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -19,6 +19,11 @@ export default function Login() {
             });
             const data = await response.json();
             console.log(data.token);
+
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("username", data.user.username);
+
+            navigate("/home"); // go home after login
         }
         catch(err){
             setError("Username or password incorrect");
@@ -27,15 +32,17 @@ export default function Login() {
 
     return (
     <div>
-        <h1>Login</h1>
+        <h1>Register New Account</h1>
         <button onClick={() => navigate("/")}>
-            Home
+        Back
         </button>
         <hr/>
         <input placeholder="Username" onChange={e => setUsername(e.target.value)} />
         <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)} />
         {error && <p>{error}</p>}
         <button onClick={handleRegister}>Register</button>
+        <br/>
+        <t1>*Password: 8 characters minimum </t1>
     </div>
   );
 }

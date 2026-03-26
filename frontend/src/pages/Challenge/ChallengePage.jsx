@@ -12,7 +12,7 @@ function ChallengePage() {
         Log Challenge
       </button>
 
-      <button onClick={() => navigate("/")}>
+      <button onClick={() => navigate("/home")}>
         Home
       </button>
     </div>

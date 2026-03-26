@@ -20,18 +20,19 @@ from . import views
 from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework.authtoken.views import obtain_auth_token
-from . views import UserViewer
+from . views import UserViewer, LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.homepage),
+    path('', views.homepage),
     path('about/', views.about),
     path('homepage/', views.homepage),
     path('api/test/', views.test_api),
     path('posts/', include('posts.urls')),
     path('users/', include('users.urls')),
+
     path('api/register/', UserViewer.as_view()),
-    path('api/login', obtain_auth_token),
+    path('api/login/', LoginView.as_view()),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

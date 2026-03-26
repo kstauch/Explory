@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Home
+import StartPage from "./pages/Home/StartPage";
+import RegisterPage from "./pages/Home/RegisterPage";
+import LoginPage from "./pages/Home/LoginPage";
 import HomePage from "./pages/Home/HomePage";
 import MyExploryPage from "./pages/Home/MyExploryPage";
-import Login from "./pages/Home/Login";
 
 // Challenge
 import ChallengePage from "./pages/Challenge/ChallengePage";
@@ -17,13 +19,16 @@ import PersonalizationPage from "./pages/Profile/PersonalizationPage";
 // Leaderboard
 import LeaderboardPage from "./pages/Leaderboard/LeaderboardPage";
 
+
 function App() {
   return (
     <Router>
       <Routes>
         {/* Home */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<StartPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
         {/* Challenge Flow */}
         <Route path="/challenge" element={<ChallengePage />} />

@@ -8,7 +8,7 @@ function MyExploryPage() {
     <div>
       <h1>My Explory Archive</h1>
 
-      <button onClick={() => navigate("/")}>
+      <button onClick={() => navigate("/home")}>
         Home
       </button>
     </div>

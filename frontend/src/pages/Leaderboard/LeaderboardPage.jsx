@@ -8,7 +8,7 @@ function LeaderboardPage() {
     <div>
       <h1>Friend's Leaderboard</h1>
 
-      <button onClick={() => navigate("/")}>
+      <button onClick={() => navigate("/home")}>
         Home
       </button>
     </div>
