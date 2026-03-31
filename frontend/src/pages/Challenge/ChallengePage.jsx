@@ -1,12 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import "./ChallengePage.css";
+import { useState, useEffect } from 'react';
+
+
 
 function ChallengePage() {
   const navigate = useNavigate();
+  const [ challenge, setChallenge ] = useState('Loading your challenge...');
+  const fetchChallenge = () => {
+      fetch('http://127.0.0.1:8000/api/random-challenge/')
+      .then(response => response.json())
+      .then(data => {
+        setChallenge(data.daily_challenge);
+      })
+      .catch(error => console.error("Error fetching data:", error));
+  }
+  useEffect(() => {
+      fetchChallenge()
+  }, [])
 
   return (
-    <div>
+    <div className = "challenge-container">
       <h1>Today's Challenge</h1>
+        <h2 className = "daily-challenge">{challenge}</h2>
+        <button onClick={fetchChallenge}>Reroll Daily Challenge</button>
 
       <button onClick={() => navigate("/log-challenge")}>
         Log Challenge

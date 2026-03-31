@@ -18,3 +18,9 @@ class User(AbstractUser): # inherits username, email, password from AbstractUser
 
     def __str__(self):
         return self.username
+
+
+class Challenges(models.Model):
+    title = models.CharField(max_length=255)
+    def __str__(self):
+        return self.title
