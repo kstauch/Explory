@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
-from users.models import Challenges
+from challenges.models import Challenges
 from django.http import JsonResponse
 # Create your views here.
 def register_view(request):
