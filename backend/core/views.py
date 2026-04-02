@@ -6,6 +6,7 @@ from .serializers import UserSerializer
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
+
 User = get_user_model()
 
 def homepage(request):
@@ -52,3 +53,4 @@ class LoginView(generics.GenericAPIView):
             return JsonResponse({
                 "error": "Incorrect Username or Password"
             }, status=400)
+

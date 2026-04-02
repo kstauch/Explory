@@ -7,8 +7,12 @@ import { useState, useEffect } from 'react';
 function ChallengePage() {
   const navigate = useNavigate();
   const [ challenge, setChallenge ] = useState('Loading your challenge...');
-  const fetchChallenge = () => {
-      fetch('http://127.0.0.1:8000/api/random-challenge/')
+  const fetchChallenge = async () => {
+      const token = localStorage.getItem('token');
+      fetch('http://127.0.0.1:8000/api/random-challenge/', {
+          method: 'GET', headers: { 'Content-Type': 'application/json',
+              Authorization: `Token ${token}`}
+          })
       .then(response => response.json())
       .then(data => {
         setChallenge(data.daily_challenge);

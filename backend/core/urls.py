@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework.authtoken.views import obtain_auth_token
 from . views import UserViewer, LoginView
-from users.views import random_challenge
+from users.views import random_challenge, update_interests
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/register/', UserViewer.as_view()),
     path('api/login/', LoginView.as_view()),
     path('api/random-challenge/', random_challenge),
+    path('api/user-preference/', update_interests),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

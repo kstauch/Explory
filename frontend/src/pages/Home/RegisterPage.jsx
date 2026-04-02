@@ -42,7 +42,7 @@ export default function RegisterPage() {
         {error && <p>{error}</p>}
         <button onClick={handleRegister}>Register</button>
         <br/>
-        <t1>*Password: 8 characters minimum </t1>
+        <p>*Password: 8 characters minimum </p>
     </div>
   );
 }
