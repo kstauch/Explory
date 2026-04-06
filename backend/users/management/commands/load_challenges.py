@@ -1,7 +1,7 @@
 import csv
 
 from django.core.management import BaseCommand
-from users.models import Challenges
+from challenges.models import Challenges
 
 
 class Command(BaseCommand):
