@@ -12,9 +12,28 @@ class User(AbstractUser): # inherits username, email, password from AbstractUser
 
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
-    # stores interests/categories from the personality quiz
     # uses a JSONField to store a list of strings
     interests = models.JSONField(default=list, blank=True)
 
     def __str__(self):
         return self.username
+
+# Friend Relationship Object - can be Pending/Accepted (will be deleted if req. is denied)
+class Friendship(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+
+    is_accepted = models.BooleanField(default=False) # false: pending, true: accepted
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # prevents duplicate requests between the same two people
+        constraints = [
+            models.UniqueConstraint(
+                fields=['sender', 'receiver'],
+                name='unique_friendship'
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.sender.username} -> {self.receiver.username} ({self.status})"
