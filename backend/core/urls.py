@@ -34,8 +34,7 @@ urlpatterns = [
 
     path('api/register/', UserViewer.as_view()),
     path('api/login/', LoginView.as_view()),
-    path('api/random-challenge/', random_challenge),
-    path('api/user-preference/', update_interests),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
