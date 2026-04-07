@@ -26,7 +26,7 @@ export default function RegisterPage() {
             navigate("/home"); // go home after login
         }
         catch(err){
-            setError("Username or password incorrect");
+            setError(err.message || "Registration Failed");
         }
     };
 
