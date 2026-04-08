@@ -17,6 +17,8 @@ class User(AbstractUser): # inherits username, email, password from AbstractUser
 
     def __str__(self):
         return self.username
+    class Meta:
+        verbose_name_plural = "Users"
 
 # Friend Relationship Object - can be Pending/Accepted (will be deleted if req. is denied)
 class Friendship(models.Model):

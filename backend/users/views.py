@@ -3,7 +3,7 @@ import json
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from rest_framework.views import APIView
-from challenges.models import Challenges
+from challenges.models import Challenges, UserChallenges
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -45,6 +45,28 @@ def update_interests(request):
     request.user.interests = request.data.get('interests', [])
     request.user.save()
     return JsonResponse({'success': True})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def log_challenge(request):
+    challenge_title = request.data.get('challenge_title')
+    print("Received title:", challenge_title)  # add this
+    print("All challenges:", list(Challenges.objects.values('title')))
+    challenge = Challenges.objects.get(title=challenge_title)
+    user_challenge, created = (UserChallenges.objects.get_or_create
+                               (user=request.user, challenge=challenge,
+                               defaults={'completed': False}))
+    return Response({'success': True}, status=201)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def complete_challenge(request):
+    challenge_title = request.data.get('challenge_title')
+    user_challenge = UserChallenges.objects.get(user=request.user,
+                                           challenge=challenge_title)
+    user_challenge.completed = True
+    user_challenge.save()
+    return Response({'success': True}, status = 200)
 
 
 @api_view(['POST'])

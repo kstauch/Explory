@@ -16,5 +16,7 @@ class UserChallenges(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
+    def __str__(self):
+        return f"{self.user.username}: {self.challenge.title}"
     class Meta:
         verbose_name_plural = "User Challenges"
