@@ -15,7 +15,7 @@ from .models import User, Friendship
 from django.shortcuts import get_object_or_404
 from .serializers import FriendshipSerializer, UserSerializer
 from django.db.models import Q
-
+from datetime import date
 def register_view(request):
     form = UserCreationForm()
     return render(request, "users/register.html",
@@ -26,11 +26,29 @@ def register_view(request):
 @permission_classes([IsAuthenticated])
 def random_challenge(request):
     user_interest = request.user.interests
+    today = date.today()
+    existing_today = UserChallenges.objects.filter(user=request.user, date=today).first()
+    if existing_today:
+        return JsonResponse({"daily_challenge": existing_today.challenge.title})
     if user_interest:
         challenge = Challenges.objects.filter(category__in = user_interest).order_by('?').first()
     else:
         challenge = Challenges.objects.order_by('?').first()
 
+    if challenge is None:
+        return JsonResponse({'error: no categories to choose from for this user'}, status = 404)
+
+    return JsonResponse({"daily_challenge": challenge.title})
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def reroll_challenge(request):
+    user_interest = request.user.interests
+    if user_interest:
+        challenge = Challenges.objects.filter(category__in = user_interest).first()
+    else:
+        challenge = Challenges.objects.order_by('?').first()
     if challenge is None:
         return JsonResponse({'error: no categories to choose from for this user'}, status = 404)
 

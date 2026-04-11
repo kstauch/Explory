@@ -11,7 +11,10 @@ class CustomUserAdmin(UserAdmin):
     )
     list_display = ['username', 'email', 'total_points', 'streak_count', 'is_staff']
 
+class ChallengesAdmin(admin.ModelAdmin):
+    list_display = ['user', 'challenge', 'completed', 'date']
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Challenges)
-admin.site.register(UserChallenges)
+admin.site.register(UserChallenges, ChallengesAdmin)
