@@ -36,7 +36,7 @@ def random_challenge(request):
         challenge = Challenges.objects.order_by('?').first()
 
     if challenge is None:
-        return JsonResponse({'error: no categories to choose from for this user'}, status = 404)
+        return JsonResponse({'error': 'no categories to choose from for this user'}, status = 404)
 
     return JsonResponse({"daily_challenge": challenge.title})
 
