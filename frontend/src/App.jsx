@@ -15,6 +15,7 @@ import LogChallengePage from "./pages/Challenge/LogChallengePage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import FriendsPage from "./pages/Profile/FriendsPage";
 import PersonalizationPage from "./pages/Profile/PersonalizationPage";
+import FriendRequestPage from "./pages/Profile/FriendRequestPage"
 
 // Leaderboard
 import LeaderboardPage from "./pages/Leaderboard/LeaderboardPage";
@@ -41,6 +42,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/personalization" element={<PersonalizationPage />} />
+        <Route path="/friendRequests" element={<FriendRequestPage />} />
 
         {/* Leaderboard */}
         <Route path="/leaderboard" element={<LeaderboardPage />} />
