@@ -42,6 +42,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/personalization" element={<PersonalizationPage />} />
+        <Route path="/friendRequests" element={<FriendRequestPage />} />
 
         {/* Leaderboard */}
         <Route path="/leaderboard" element={<LeaderboardPage />} />
