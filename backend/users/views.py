@@ -163,3 +163,14 @@ def get_friends_list(request):
     friends = UserSerializer(friends_list, many=True)
 
     return Response(friends.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def upload_photo(request):
+    file = request.data.get('challengeimage')
+    if not file:
+        return Response({"error": "Challenge image not found."}, status=404)
+    request.user.challengeimage = file
+    request.user.save()
+    return Response({"success": True}, status=200)

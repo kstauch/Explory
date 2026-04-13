@@ -3,8 +3,6 @@ import "./PersonalizationPage.css";
 import {useState} from "react";
 import {useEffect} from "react";
 
-
-
 function PersonalizationPage() {
   const navigate = useNavigate();
   const categories = ['cooking', 'nature', 'personal health', 'relationship', 'misc'];
@@ -12,8 +10,9 @@ function PersonalizationPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/api/user-preference/", {
-        headers: {Authorization: `Token ${token}`},
+    fetch("http://127.0.0.1:8000/users/api/user-preference/", {
+        headers: {'Content-Type': 'application/json',
+            Authorization: `Token ${token}`},
     })
         .then((response) => response.json())
         .then((data) => {
@@ -34,7 +33,7 @@ function PersonalizationPage() {
   }
   const handleSave = () => {
       const token = localStorage.getItem('token');
-      fetch('http://127.0.0.1:8000/api/user-preference/',
+      fetch('http://127.0.0.1:8000/users/api/user-preference/',
           { method : 'POST', headers : {'Content-Type': 'application/json',
                   Authorization : `Token ${token}`},
           body: JSON.stringify({interests : interests})
