@@ -46,7 +46,7 @@ def random_challenge(request):
 def reroll_challenge(request):
     user_interest = request.user.interests
     if user_interest:
-        challenge = Challenges.objects.filter(category__in = user_interest).first()
+        challenge = Challenges.objects.filter(category__in = user_interest).order_by('?').first()
     else:
         challenge = Challenges.objects.order_by('?').first()
     if challenge is None:
@@ -73,7 +73,9 @@ def log_challenge(request):
     challenge = Challenges.objects.get(title=challenge_title)
     user_challenge, created = (UserChallenges.objects.get_or_create
                                (user=request.user, challenge=challenge,
-                               defaults={'completed': False}))
+                                date=date.today(),
+                               defaults={'completed': False},
+                                ))
     return Response({'success': True}, status=201)
 
 @api_view(['POST'])

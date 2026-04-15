@@ -1,3 +1,26 @@
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Challenges, UserChallenges
+from datetime import date
 
-# Create your views here.
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_todays_challenge(request):
+    today = date.today()
+    challenges = UserChallenges.objects.filter(user_id=request.user.id, date=today)
+    data = []
+    for challenge in challenges:
+        data.append({'title': challenge.challenge.title, 'completed': challenge.completed})
+    return Response({'challengeslist': data}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def post_challenges(request):
+    challenges = Challenges.objects.all()

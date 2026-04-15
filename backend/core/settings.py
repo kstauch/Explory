@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
+import dj_database_url
+from dotenv import load_dotenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -88,15 +90,10 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+
+load_dotenv()
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'explory_db',
-        'USER': 'postgres',
-        'PASSWORD': 'ILoveExplory',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
 }
 
 

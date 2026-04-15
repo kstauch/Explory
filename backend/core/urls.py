@@ -33,7 +33,7 @@ urlpatterns = [
 
     path('api/register/', UserViewer.as_view()),
     path('api/login/', LoginView.as_view()),
-
+    path('challenges/', include('challenges.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
