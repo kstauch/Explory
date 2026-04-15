@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./LogChallengePage.css";
 
 function LogChallengePage() {
@@ -19,7 +19,15 @@ function LogChallengePage() {
           body: formData});
       const data = await response.json();
       console.log(data)
-    }
+      }
+  const [todaysChallenge, setTodaysChallenge] = useState([]);
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      fetch('http://localhost:8000/challenges/api/todays-challenge/',
+      {headers: {Authorization: `Token ${token}`}})
+      .then(response => response.json())
+      .then(data => setTodaysChallenge(data.challengeslist))
+  }, []);
 
   return (
     <div>
@@ -35,6 +43,7 @@ function LogChallengePage() {
         <button onClick={() => document.getElementById('userfile').click()}>
             Choose File
         </button>
+        <p>{todaysChallenge[0]?.title}</p>
       <button onClick={() => navigate("/challenge")}>Post</button>
     </div>
   );

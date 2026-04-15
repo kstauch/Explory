@@ -45,7 +45,7 @@ function ChallengePage() {
     <div className = "challenge-container">
       <h1>Today's Challenge</h1>
         <h2 className = "daily-challenge">{challenge}</h2>
-        <button onClick={fetchChallenge}>Reroll Daily Challenge</button>
+        <button onClick={reroll_challenge}>Reroll Daily Challenge</button>
 
         <button onClick={saveChallenge}>Save</button>
 
