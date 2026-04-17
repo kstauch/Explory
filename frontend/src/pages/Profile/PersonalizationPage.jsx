@@ -5,7 +5,7 @@ import {useEffect} from "react";
 
 function PersonalizationPage() {
   const navigate = useNavigate();
-  const categories = ['cooking', 'nature', 'personal health', 'relationship', 'misc'];
+  const categories = ['Cooking', 'Nature', 'Personal health', 'Relationship', 'Misc'];
   const [interests, setInterest] = useState(categories);
 
   useEffect(() => {

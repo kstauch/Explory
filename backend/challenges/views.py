@@ -15,8 +15,11 @@ def get_todays_challenge(request):
     today = date.today()
     challenges = UserChallenges.objects.filter(user_id=request.user.id, date=today)
     data = []
-    for challenge in challenges:
-        data.append({'title': challenge.challenge.title, 'completed': challenge.completed})
+    for userc in challenges:
+        data.append({
+            'id': userc.challenge.id,
+            'title': userc.challenge.title,
+            'completed': userc.completed})
     return Response({'challengeslist': data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])

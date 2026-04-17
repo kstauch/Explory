@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from posts.views import make_post
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
@@ -30,10 +31,10 @@ urlpatterns = [
     path('api/test/', views.test_api),
     path('posts/', include('posts.urls')),
     path('users/', include('users.urls')),
-
+    path('challenges/', include('challenges.urls')),
     path('api/register/', UserViewer.as_view()),
     path('api/login/', LoginView.as_view()),
-    path('challenges/', include('challenges.urls')),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

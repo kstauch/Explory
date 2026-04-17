@@ -6,7 +6,7 @@ app_name = 'users'
 urlpatterns = [
     path('register/', views.register_view, name = 'register'),
 
-    path('api/random-challenge/', views.random_challenge),
+        path('api/random-challenge/', views.random_challenge),
     path('api/reroll/', views.reroll_challenge, name='reroll'),
     path('api/log-challenge/', views.log_challenge),
     path('api/complete-challenge/', views.complete_challenge),
