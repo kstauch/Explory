@@ -18,5 +18,6 @@ urlpatterns = [
     path('api/friends/requests/pending/', views.get_pending_friend_requests, name='pending_requests'),
     path('api/friends/list/', views.get_friends_list, name='friends_list'),
     path('api/upload-challenge/', views.upload_photo, name='upload_photo'),
+    path('api/complete-challenge/', views.complete_challenge, name='complete_challenge'),
 
 ]

@@ -12,11 +12,19 @@ function HomePage() {
         setUsername(storedUsername);
     }
   }, []);
+  const [streak, setStreak] = useState("0");
 
+  useEffect(() => {
+      const storedStreak = localStorage.getItem("streak_count");
+      if (storedStreak) {
+          setStreak(storedStreak);
+      }
+  },[])
   return (
     <div>
       <h1>Explory</h1>
       <h2>Welcome, {username}!</h2>
+        <h3>Streak: {streak}</h3>
 
       <button onClick={() => navigate("/challenge")}>
         Today's Challenge
