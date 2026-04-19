@@ -101,18 +101,19 @@ def complete_challenge(request):
     if request.user.last_completion_date ==  yesterday:
         request.user.streak_count += 1
         print("streak continued")
-        user_challenge.completed = True
+
     elif request.user.last_completion_date == today:
         print("already completed today, skipping")
         pass
     else:
         request.user.streak_count = 1
         print("streak reset")
+    user_challenge.completed = True
     user_challenge.save()
     request.user.total_points += user_challenge.challenge.points
     request.user.last_completion_date = date.today()
     request.user.save()
-    return Response({'success': True, 'streak': request.user.streak_count, 'points': request.user.total_points}, status = 200)
+    return Response({'success': True, 'streak': request.user.streak_count, 'total_points': request.user.total_points}, status = 200)
 
 
 @api_view(['POST'])

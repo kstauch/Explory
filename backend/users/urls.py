@@ -9,7 +9,7 @@ urlpatterns = [
         path('api/random-challenge/', views.random_challenge),
     path('api/reroll/', views.reroll_challenge, name='reroll'),
     path('api/log-challenge/', views.log_challenge),
-    path('api/complete-challenge/', views.complete_challenge),
+
     path('api/user-preference/', views.update_interests),
 
     path('api/friends/request/send/', views.send_friend_request, name='send_friend_request'),
