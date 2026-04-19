@@ -5,6 +5,7 @@ from django.conf import settings
 
 class Challenges(models.Model):
     title = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
     points = models.PositiveIntegerField(default=0)
     category = models.CharField(max_length=100)
 
