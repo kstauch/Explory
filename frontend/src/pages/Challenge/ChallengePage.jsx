@@ -6,7 +6,7 @@ import upload from "../../assets/upload.jpg"
 
 function ChallengePage() {
   const navigate = useNavigate();
-  const [ challenge, setChallenge ] = useState('Loading your challenge...');
+  const [ challenge, setChallenge ] = useState({ title: 'Loading your challenge...', id: null, completed: false });
 
   const fetchChallenge = async () => {
       const token = localStorage.getItem('token');
@@ -69,9 +69,10 @@ function ChallengePage() {
 
 
         <h1 className="mb-4 text-4xl font-bold">Today's Challenge</h1>
-        <p className="mb-8 text-2xl text-primary font-semibold">
-           {challenge}
-        </p>
+            <p className="mb-8 text-2xl text-primary font-semibold">
+
+            {challenge.title}
+            </p>
 
         <div className="flex justify-center gap-4 w-full">
           <button className="btn btn-outline" onClick={reroll_challenge}>
