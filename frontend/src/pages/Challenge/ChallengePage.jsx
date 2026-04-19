@@ -54,11 +54,7 @@ function ChallengePage() {
       {/* pt-16 pushes it down from the top, pb-20 gives it breathing room before the hero */}
       <div className="flex flex-col items-center pt-16 pb-20 px-4 text-center">
 
-        <img
-          src={rat}
-          alt="Explory Logo Placeholder"
-          className="w-[200px] h-[250px] object-cover rounded-xl shadow-lg mb-8"
-        />
+
 
         <h1 className="mb-4 text-4xl font-bold">Today's Challenge</h1>
         <p className="mb-8 text-2xl text-primary font-semibold">
@@ -69,9 +65,7 @@ function ChallengePage() {
           <button className="btn btn-outline" onClick={reroll_challenge}>
               Reroll
           </button>
-          <button className="btn btn-secondary" onClick={() => navigate("/home")}>
-              Home
-          </button>
+
         </div>
       </div>
 
@@ -80,7 +74,7 @@ function ChallengePage() {
           ========================================= */}
       {/* Notice min-h-screen is changed to min-h-[50vh] so it acts like a banner! */}
       <div
-        className="hero min-h-[50vh]"
+        className="hero min-h-[75vh]"
         style={{
           backgroundImage: `url(${upload})`,
         }}
