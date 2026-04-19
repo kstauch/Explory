@@ -21,9 +21,3 @@ def get_todays_challenge(request):
             'title': userc.challenge.title,
             'completed': userc.completed})
     return Response({'challengeslist': data}, status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def post_challenges(request):
-    challenges = Challenges.objects.all()
