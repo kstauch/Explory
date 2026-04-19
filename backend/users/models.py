@@ -11,6 +11,7 @@ class User(AbstractUser): # inherits username, email, password from AbstractUser
     last_completion_date = models.DateField(null=True, blank=True) # stores the last date a challenge was completed to calculate streaks
 
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    bio = models.TextField(blank=True, default="")
 
     # uses a JSONField to store a list of strings
     interests = models.JSONField(default=list, blank=True)

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./LeaderboardPage.css";
+
 
 function LeaderboardPage() {
   const navigate = useNavigate();
