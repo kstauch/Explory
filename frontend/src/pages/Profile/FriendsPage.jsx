@@ -7,9 +7,7 @@ function FriendsPage() {
     return (
         <div>
             <h1>Your Friends</h1>
-
-
-            <button onClick={() => navigate("/profile")}>
+            <button className="btn btn-primary" onClick={() => navigate("/profile")}>
                 Profile
             </button>
             <button className="btn btn-primary" onClick={() => navigate("/friendRequests")}>
