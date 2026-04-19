@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import User, Friendship
 from challenges.models import Challenges, UserChallenges
+from .serializers import FriendshipSerializer
 
 
 class CustomUserAdmin(UserAdmin):
@@ -18,3 +19,4 @@ class ChallengesAdmin(admin.ModelAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Challenges)
 admin.site.register(UserChallenges, ChallengesAdmin)
+admin.site.register(Friendship)
