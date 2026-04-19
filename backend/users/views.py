@@ -197,6 +197,21 @@ def get_friends_list(request):
     return Response(friends.data, status=status.HTTP_200_OK)
 
 
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def remove_friend(request, friend_id):
+    friendship = get_object_or_404(
+        Friendship,
+        (Q(sender=request.user, receiver_id=friend_id) |
+         Q(sender_id=friend_id, receiver=request.user)),
+        is_accepted=True
+    )
+    friendship.delete()
+
+    return Response({"success": "Friend removed successfully."}, status=status.HTTP_200_OK)
+
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -239,6 +254,7 @@ def upload_photo(request):
     request.user.save()
     return Response({"success": True}, status=200)
 
+
 @api_view(['GET', 'POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -253,6 +269,7 @@ def profile(request):
             user.profile_picture = request.FILES['profile_picture']
         user.save()
         return Response({'success': True})
+
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
