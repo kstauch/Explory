@@ -9,9 +9,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User, Friendship
 from django.shortcuts import get_object_or_404
-from .serializers import FriendshipSerializer, UserSerializer
+from .serializers import FriendshipSerializer, UserSerializer, PostSerializer
 from django.db.models import Q
 from datetime import date, timedelta
+from posts.models import Post
 
 
 def register_view(request):
@@ -252,3 +253,19 @@ def profile(request):
             user.profile_picture = request.FILES['profile_picture']
         user.save()
         return Response({'success': True})
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_friend_posts(request):
+    friendships = Friendship.objects.filter(Q(sender=request.user) | Q(receiver=request.user), is_accepted=True)
+    friends_list = []
+    for friendship_obj in friendships:
+        if friendship_obj.sender == request.user:
+            friends_list.append(friendship_obj.receiver)
+        else:
+            friends_list.append(friendship_obj.sender)
+
+    posts = Post.objects.filter(user__in=friends_list).order_by('-date')
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

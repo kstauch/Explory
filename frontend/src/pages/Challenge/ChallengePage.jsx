@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import rat from "../../assets/rat.gif";
+import upload from "../../assets/upload.jpg"
 
 function ChallengePage() {
   const navigate = useNavigate();
@@ -51,29 +53,57 @@ function ChallengePage() {
         })
 
     }
-    const isCompleted = challenge?.completed;
+
+  // --- UI RENDERING ---
   return (
-    <div className = "challenge-container">
-      <h1>Today's Challenge</h1>
-        <h2 className = "daily-challenge">{challenge?.title ?? 'Loading challenge...'}</h2>
-        {!isCompleted && (
-            <>
-                <button onClick={reroll_challenge}>Reroll Daily Challenge</button>
+    // 1. A master wrapper for the whole page (gives it a nice default background)
+    <div className="w-full bg-base-100">
 
-                <button onClick={saveChallenge}>Save</button>
+      {/* =========================================
+          SECTION 1: THE CHALLENGE CONTENT
+          ========================================= */}
+      {/* pt-16 pushes it down from the top, pb-20 gives it breathing room before the hero */}
+      <div className="flex flex-col items-center pt-16 pb-20 px-4 text-center">
 
-                <button onClick={()=>navigate("/log-challenge")}>
-                    Log Challenge
-                </button>
-            </>
-        )}
-        {isCompleted && (
-            <p>You have already completed today's challenge!</p>
-        )}
 
-        <button onClick={() => navigate("/home")}>
-        Home
-        </button>
+
+        <h1 className="mb-4 text-4xl font-bold">Today's Challenge</h1>
+        <p className="mb-8 text-2xl text-primary font-semibold">
+           {challenge}
+        </p>
+
+        <div className="flex justify-center gap-4 w-full">
+          <button className="btn btn-outline" onClick={reroll_challenge}>
+              Reroll
+          </button>
+
+        </div>
+      </div>
+
+      {/* =========================================
+          SECTION 2: THE HERO BANNER
+          ========================================= */}
+      {/* Notice min-h-screen is changed to min-h-[50vh] so it acts like a banner! */}
+      <div
+        className="hero min-h-[75vh]"
+        style={{
+          backgroundImage: `url(${upload})`,
+        }}
+      >
+        <div className="hero-overlay bg-opacity-70"></div>
+
+        <div className="hero-content text-neutral-content text-center">
+          <div className="max-w-md">
+            <h1 className="mb-5 text-4xl font-bold">Ready to upload?</h1>
+            <p className="mb-5">
+              Get started for the day!
+              Upload your completed challenge here
+            </p>
+            <button className="btn btn-accent" onClick={() => navigate("/log-challenge")}>Upload Challenge</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
