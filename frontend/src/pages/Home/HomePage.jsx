@@ -15,32 +15,71 @@ function HomePage() {
 
   return (
     <div>
-      <h1>Explory</h1>
-      <h2>Welcome, {username}!</h2>
-
-      <button onClick={() => navigate("/challenge")}>
-        Today's Challenge
+      <div className="flex justify-between items-center mt-10 pl-2 pr-10">
+      <h1 className="text-3xl font-semibold">Welcome, {username}!</h1>
+      <button onClick={() => navigate("/challenge")} className="btn btn-success btn-wide font-light text-lg">
+        See Today's Challenge
       </button>
+    </div>
 
-      <button onClick={() => navigate("/explory")}>
-        My Explory
-      </button>
-
-      <button onClick={() => navigate("/profile")}>
-        Profile
-      </button>
-
-      <button onClick={() => navigate("/leaderboard")}>
-        Leaderboard
-      </button>
-      <hr/>
-
-      <footer>
-        <button onClick={() => navigate("/")}>
-        Exit Explory
-      </button></footer>
       
-
+  <div className="mt-20"> 
+    <p className="mt-3 text-base font-light px-5 mb-2">Explore Friend's Recent Activities!</p>   
+  <div className="carousel w-full">
+    <div id="slide1" className="carousel-item relative w-full flex-col">
+      <img
+        src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
+        className="w-full" />
+      <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+        <a href="#slide4" className="btn btn-circle">❮</a>
+        <a href="#slide2" className="btn btn-circle">❯</a>
+      </div>
+      <div className="p-2">
+        <p className="text-lg font-semibold">User</p>
+        <p className="text-base">Activity</p>
+      </div>
+    </div>
+    <div id="slide2" className="carousel-item relative w-full flex-col">
+      <img
+        src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
+        className="w-full" />
+      <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+        <a href="#slide1" className="btn btn-circle">❮</a>
+        <a href="#slide3" className="btn btn-circle">❯</a>
+      </div>
+      <div className="p-2">
+        <p className="text-lg font-semibold">User</p>
+        <p className="text-base">Activity</p>
+      </div>
+    </div>
+    <div id="slide3" className="carousel-item relative w-full flex-col">
+      <img
+        src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
+        className="w-full" />
+      <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+        <a href="#slide2" className="btn btn-circle">❮</a>
+        <a href="#slide4" className="btn btn-circle">❯</a>
+      </div>
+      <div className="p-2">
+        <p className="text-lg font-semibold">User</p>
+        <p className="text-base">Activity</p>
+      </div>
+    </div>
+    <div id="slide4" className="carousel-item relative w-full flex-col">
+      <img
+        src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
+        className="w-full" />
+      <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+        <a href="#slide3" className="btn btn-circle">❮</a>
+        <a href="#slide1" className="btn btn-circle">❯</a>
+      </div>
+      <div className="p-2">
+        <p className="text-lg font-semibold">User</p>
+        <p className="text-base">Activity</p>
+      </div>
+    </div>
+  </div>  
+</div>
 
     </div>
   );
