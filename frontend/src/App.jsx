@@ -1,4 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+
+// Navbar
+import Navbar from "./components/Navbar";
 
 // Home
 import StartPage from "./pages/Home/StartPage";
@@ -21,32 +24,36 @@ import FriendRequestPage from "./pages/Profile/FriendRequestPage"
 import LeaderboardPage from "./pages/Leaderboard/LeaderboardPage";
 
 
-function App() {
+function Layout() {
+  const location = useLocation();
+  const noNavbarRoutes = ["/", "/login", "/register"];
+  const showNavbar = !noNavbarRoutes.includes(location.pathname);
+
   return (
-    <Router>
+    <>
+      {showNavbar && <Navbar />}
       <Routes>
-        {/* Home */}
         <Route path="/" element={<StartPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-
-        {/* Challenge Flow */}
         <Route path="/challenge" element={<ChallengePage />} />
         <Route path="/log-challenge" element={<LogChallengePage />} />
-
-        {/* MyExplory */}
         <Route path="/explory" element={<MyExploryPage />} />
-
-        {/* Profile Flow */}
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/personalization" element={<PersonalizationPage />} />
         <Route path="/friendRequests" element={<FriendRequestPage />} />
-
-        {/* Leaderboard */}
         <Route path="/leaderboard" element={<LeaderboardPage />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Layout />
     </Router>
   );
 }
