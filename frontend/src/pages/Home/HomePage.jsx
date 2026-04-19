@@ -12,7 +12,22 @@ function HomePage() {
         setUsername(storedUsername);
     }
   }, []);
+  const [streak, setStreak] = useState("0");
+  const [points, setPoints] = useState("0");
 
+  useEffect(() => {
+      const storedStreak = localStorage.getItem("streak_count");
+      if (storedStreak) {
+          setStreak(storedStreak);
+      }
+  },[])
+
+    useEffect(() => {
+        const points = localStorage.getItem("total_points");
+        if (points) {
+            setPoints(points);
+        }
+    }, [])
   return (
     <div>
       <div className="flex justify-between items-center mt-10 pl-2 pr-10">

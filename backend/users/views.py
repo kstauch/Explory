@@ -15,7 +15,9 @@ from .models import User, Friendship
 from django.shortcuts import get_object_or_404
 from .serializers import FriendshipSerializer, UserSerializer
 from django.db.models import Q
-from datetime import date
+from datetime import date, timedelta
+
+
 def register_view(request):
     form = UserCreationForm()
     return render(request, "users/register.html",
@@ -80,13 +82,38 @@ def log_challenge(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
 def complete_challenge(request):
     challenge_title = request.data.get('challenge_title')
-    user_challenge = UserChallenges.objects.get(user=request.user,
-                                           challenge=challenge_title)
+    print("challenge_title received:", challenge_title)
+    print("last_completion_date:", request.user.last_completion_date)
+    print("today:", date.today())
+    try:
+        user_challenge = UserChallenges.objects.get(user=request.user, challenge__title=challenge_title)
+        print("user_challenge found:", user_challenge)
+        print("already completed?", user_challenge.completed)
+    except UserChallenges.DoesNotExist:
+        return Response({'error': 'Challenge does not exist.'}, status=404)
+    if user_challenge.completed:
+        return Response({'error': 'Challenge already completed.'}, status=409)
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    if request.user.last_completion_date ==  yesterday:
+        request.user.streak_count += 1
+        print("streak continued")
+
+    elif request.user.last_completion_date == today:
+        print("already completed today, skipping")
+        pass
+    else:
+        request.user.streak_count = 1
+        print("streak reset")
     user_challenge.completed = True
     user_challenge.save()
-    return Response({'success': True}, status = 200)
+    request.user.total_points += user_challenge.challenge.points
+    request.user.last_completion_date = date.today()
+    request.user.save()
+    return Response({'success': True, 'streak': request.user.streak_count, 'total_points': request.user.total_points}, status = 200)
 
 
 @api_view(['POST'])

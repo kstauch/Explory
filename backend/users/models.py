@@ -20,7 +20,7 @@ class User(AbstractUser): # inherits username, email, password from AbstractUser
     class Meta:
         verbose_name_plural = "Users"
 
-# Friend Relationship Object - can be Pending/Accepted (will be deleted if req. is denied)
+    # Friend Relationship Object - can be Pending/Accepted (will be deleted if req. is denied)
 class Friendship(models.Model):
     sender = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)

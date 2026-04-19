@@ -9,7 +9,7 @@ urlpatterns = [
         path('api/random-challenge/', views.random_challenge),
     path('api/reroll/', views.reroll_challenge, name='reroll'),
     path('api/log-challenge/', views.log_challenge),
-    path('api/complete-challenge/', views.complete_challenge),
+
     path('api/user-preference/', views.update_interests),
 
     path('api/friends/request/send/', views.send_friend_request, name='send_friend_request'),
@@ -18,5 +18,6 @@ urlpatterns = [
     path('api/friends/requests/pending/', views.get_pending_friend_requests, name='pending_requests'),
     path('api/friends/list/', views.get_friends_list, name='friends_list'),
     path('api/upload-challenge/', views.upload_photo, name='upload_photo'),
+    path('api/complete-challenge/', views.complete_challenge, name='complete_challenge'),
 
 ]
