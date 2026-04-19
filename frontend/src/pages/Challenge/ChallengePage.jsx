@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import "./ChallengePage.css";
 import { useState, useEffect } from 'react';
 import rat from "../../assets/rat.gif";
 import upload from "../../assets/upload.jpg"

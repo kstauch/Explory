@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import "./LogChallengePage.css";
 
 function LogChallengePage() {
   const navigate = useNavigate();

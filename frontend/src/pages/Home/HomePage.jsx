@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import "./HomePage.css";
 import { useEffect, useState } from "react";
 
 function HomePage() {

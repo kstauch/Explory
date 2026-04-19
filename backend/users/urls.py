@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/upload-challenge/', views.upload_photo, name='upload_photo'),
     path('api/complete-challenge/', views.complete_challenge, name='complete_challenge'),
 
+    path('api/profile/', views.profile, name='profile'),
 ]

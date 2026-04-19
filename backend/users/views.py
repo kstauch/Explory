@@ -239,6 +239,21 @@ def upload_photo(request):
     request.user.save()
     return Response({"success": True}, status=200)
 
+@api_view(['GET', 'POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    if request.method == 'GET':
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    if request.method == 'POST':
+        user = request.user
+        user.bio = request.data.get('bio', user.bio)
+        if 'profile_picture' in request.FILES:
+            user.profile_picture = request.FILES['profile_picture']
+        user.save()
+        return Response({'success': True})
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
