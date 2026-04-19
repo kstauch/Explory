@@ -21,8 +21,15 @@ class UserChallenges(models.Model):
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     date = models.DateField(auto_now_add=True)
+    points = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username}: {self.challenge.title}"
     class Meta:
         verbose_name_plural = "User Challenges"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'challenge', 'date'],
+                name="unique_user_challenge_per_day",
+            )
+        ]

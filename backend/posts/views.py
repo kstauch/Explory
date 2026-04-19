@@ -21,7 +21,7 @@ def make_post(request):
     body = request.data.get('body')
 
     try:
-        user_challenge = UserChallenges.objects.get(user=request.user, challenge_id=challenge_id)
+        user_challenge = UserChallenges.objects.filter(user=request.user, challenge_id=challenge_id).last()
         post = Post.objects.create(
             user = request.user,
             title=title,

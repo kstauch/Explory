@@ -10,22 +10,34 @@ function ChallengePage() {
 
   const fetchChallenge = async () => {
       const token = localStorage.getItem('token');
-      fetch('http://127.0.0.1:8000/users/api/random-challenge/', {
-          method: 'GET', headers: { 'Content-Type': 'application/json',
-              Authorization: `Token ${token}`}
-          })
-      .then(response => response.json())
-      .then(data => setChallenge(data.daily_challenge))
-      .catch(error => console.error("Error fetching data:", error))
-  }
+      const challengeRes = await fetch('http://127.0.0.1:8000/users/api/random-challenge/',{
+          headers: {Authorization: `Token ${token}`}
+      });
+      const challengeData = await challengeRes.json();
+      const todayRes = await fetch('http://127.0.0.1:8000/challenges/api/todays-challenge/',{
+          headers: {Authorization: `Token ${token}`}
+      });
+      const todayData = await todayRes.json();
+      const todayChallenge = todayData.challengeslist?.[0];
+      setChallenge({title: challengeData.daily_challenge,
+      id: todayChallenge?.id ?? null, completed: todayChallenge?.completed ?? false});
+    }
+
   const reroll_challenge = async () => {
       const token = localStorage.getItem('token');
-      fetch('http://127.0.0.1:8000/users/api/reroll/', {
-          method: 'GET', headers: { 'Content-Type': 'application/json',
-          Authorization: `Token ${token}`}})
-      .then(response => response.json())
-      .then(data => {setChallenge(data.daily_challenge)})
-      .catch (error => console.error("Error fetching data:", error))
+      console.log(token);
+      try{
+              const res = await fetch('http://127.0.0.1:8000/users/api/reroll/', {
+                  method: 'GET', headers: { 'Content-Type': 'application/json',
+                  Authorization: `Token ${token}`}})
+          console.log("reroll", res.status);
+          const data = await res.json();
+          console.log("data");
+          setChallenge(prev=>({...prev, title: data.daily_challenge}));
+      }
+      catch(err){
+          console.log(err);
+      }
   }
   useEffect(() => {
       fetchChallenge()
@@ -37,7 +49,7 @@ function ChallengePage() {
             headers: { 'Content-Type': 'application/json',
             Authorization: `Token ${token}`},
             body: JSON.stringify({
-                challenge_title: challenge,
+                challenge_title: challenge?.title,
             })
         })
 

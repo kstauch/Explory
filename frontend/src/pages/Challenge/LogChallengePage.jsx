@@ -28,12 +28,16 @@ function LogChallengePage() {
       fetch('http://localhost:8000/challenges/api/todays-challenge/',
       {headers: {Authorization: `Token ${token}`}})
       .then(response => response.json())
-      .then(data => setTodaysChallenge(data.challengeslist))
+      .then(data => {
+          console.log('challenge data', data);
+          setTodaysChallenge(data.challengeslist);
+      })
   }, []);
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const handleSubmit = async () => {
         const challengeId = todaysChallenge[0]?.id;
+        const challengeTitle = todaysChallenge[0]?.title;
         const token = localStorage.getItem('token');
         const formData = new FormData();
         formData.append('image', file);
@@ -45,14 +49,31 @@ function LogChallengePage() {
         console.log("BODY:", body);
         console.log("CHALLENGE:", todaysChallenge[0]);
         console.log("CHALLENGE ID:", todaysChallenge[0]?.id);
-        const response = await fetch('http://localhost:8000/posts/api/create/', {
+        const postResponse = await fetch('http://localhost:8000/posts/api/create/', {
             method: 'POST',
             headers: {authorization: `Token ${token}`},
             body: formData
         });
-        const data = await response.json();
-        console.log(data);
+        const postData = await postResponse.json();
+        console.log("POST data:", postData);
+
+        if (postData.success) {
+            const updateData = await fetch('http://localhost:8000/users/api/complete-challenge/', {
+                method: 'POST', headers: {
+                    authorization: `Token ${token}`, 'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({challenge_title: challengeTitle})
+            });
+            const completeData = await updateData.json();
+            console.log("COMPLETE CHALLENGE:", completeData);
+            if (completeData.success) {
+                localStorage.setItem('streak_count', completeData.streak);
+                localStorage.setItem('total_points', completeData.total_points);
+                navigate('/home');
+            }
+        }
     }
+
 
   return (
     <div>

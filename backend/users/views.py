@@ -1,11 +1,7 @@
-import json
-
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
-from rest_framework.views import APIView
 from challenges.models import Challenges, UserChallenges
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -13,13 +9,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User, Friendship
 from django.shortcuts import get_object_or_404
-from .serializers import FriendshipSerializer, UserSerializer
+from .serializers import FriendshipSerializer, UserSerializer, PostSerializer
 from django.db.models import Q
-from datetime import date
+from datetime import date, timedelta
+from posts.models import Post
+
+
 def register_view(request):
     form = UserCreationForm()
     return render(request, "users/register.html",
                   {"form": form})
+
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -40,6 +40,7 @@ def random_challenge(request):
 
     return JsonResponse({"daily_challenge": challenge.title})
 
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -54,6 +55,7 @@ def reroll_challenge(request):
 
     return JsonResponse({"daily_challenge": challenge.title})
 
+
 @api_view(['POST', 'GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -63,6 +65,7 @@ def update_interests(request):
     request.user.interests = request.data.get('interests', [])
     request.user.save()
     return JsonResponse({'success': True})
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -78,15 +81,41 @@ def log_challenge(request):
                                 ))
     return Response({'success': True}, status=201)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
 def complete_challenge(request):
     challenge_title = request.data.get('challenge_title')
-    user_challenge = UserChallenges.objects.get(user=request.user,
-                                           challenge=challenge_title)
+    print("challenge_title received:", challenge_title)
+    print("last_completion_date:", request.user.last_completion_date)
+    print("today:", date.today())
+    try:
+        user_challenge = UserChallenges.objects.get(user=request.user, challenge__title=challenge_title)
+        print("user_challenge found:", user_challenge)
+        print("already completed?", user_challenge.completed)
+    except UserChallenges.DoesNotExist:
+        return Response({'error': 'Challenge does not exist.'}, status=404)
+    if user_challenge.completed:
+        return Response({'error': 'Challenge already completed.'}, status=409)
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    if request.user.last_completion_date ==  yesterday:
+        request.user.streak_count += 1
+        print("streak continued")
+
+    elif request.user.last_completion_date == today:
+        print("already completed today, skipping")
+        pass
+    else:
+        request.user.streak_count = 1
+        print("streak reset")
     user_challenge.completed = True
     user_challenge.save()
-    return Response({'success': True}, status = 200)
+    request.user.total_points += user_challenge.challenge.points
+    request.user.last_completion_date = date.today()
+    request.user.save()
+    return Response({'success': True, 'streak': request.user.streak_count, 'total_points': request.user.total_points}, status = 200)
 
 
 @api_view(['POST'])
@@ -123,6 +152,7 @@ def accept_friend_request(request):
     friendship.save()
 
     return Response({"success": "Friend request accepted!"}, status=status.HTTP_200_OK)
+
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
@@ -166,6 +196,38 @@ def get_friends_list(request):
 
     return Response(friends.data, status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_friends_leaderboard(request):
+    # user is (the sender OR the receiver) AND the request is accepted
+    friendships = Friendship.objects.filter(Q(sender=request.user) | Q(receiver=request.user), is_accepted=True)
+
+    leaderboard_users = []
+    for friendship_obj in friendships:
+        if friendship_obj.sender == request.user:
+            leaderboard_users.append(friendship_obj.receiver)
+        else:
+            leaderboard_users.append(friendship_obj.sender)
+
+    leaderboard_users.append(request.user)
+    leaderboard_users.sort(key=lambda user: user.total_points, reverse=True)
+    leaderboard_data = UserSerializer(leaderboard_users, many=True)
+
+    return Response(leaderboard_data.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_global_leaderboard(request):
+    all_users = User.objects.all().order_by('-total_points')
+    leaderboard_data = UserSerializer(all_users, many=True)
+
+    return Response(leaderboard_data.data, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -176,3 +238,19 @@ def upload_photo(request):
     request.user.challengeimage = file
     request.user.save()
     return Response({"success": True}, status=200)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_friend_posts(request):
+    friendships = Friendship.objects.filter(Q(sender=request.user) | Q(receiver=request.user), is_accepted=True)
+    friends_list = []
+    for friendship_obj in friendships:
+        if friendship_obj.sender == request.user:
+            friends_list.append(friendship_obj.receiver)
+        else:
+            friends_list.append(friendship_obj.sender)
+
+    posts = Post.objects.filter(user__in=friends_list).order_by('-date')
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

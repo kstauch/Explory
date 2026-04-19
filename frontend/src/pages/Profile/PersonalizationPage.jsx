@@ -2,11 +2,12 @@ import { useNavigate } from "react-router-dom";
 import "./PersonalizationPage.css";
 import {useState} from "react";
 import {useEffect} from "react";
+import { Link } from "react-router-dom";
 
 function PersonalizationPage() {
   const navigate = useNavigate();
   const categories = ['Cooking', 'Nature', 'Personal health', 'Relationship', 'Misc'];
-  const [interests, setInterest] = useState(categories);
+  const [interests, setInterest] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,6 +29,9 @@ function PersonalizationPage() {
           setInterest(interests.filter(c => c !== category));
       }
       else{
+        if (interests.length >= 4) {
+        return;
+        }
           setInterest([...interests, category]);
       }
   }
@@ -50,26 +54,36 @@ function PersonalizationPage() {
   };
     console.log(interests);
   return (
-    <div>
-        <h1>Your Personalization</h1>
-        <button onClick={() => navigate("/profile")}>
-        Profile
-        </button>
-        <div>
-            {categories.map(category => (
-                <div key={category}>
-                    <input type="checkbox"
-                           id = {category}
-                           checked={interests.includes(category)}
-                           onChange={() => handleInterestToggle(category)}
-                    />
-                    <label htmlFor={category}>{category}</label>
-                </div>
-            ))}
+  <div>
+    <h1 className="mt-16 text-center text-lg font-bold">Your Personalization</h1>
+    <p className="mt-3 text-base text-center font-normal">Select your interests so that we can match you with the best Explory Activities for you!</p>
+    <p className="text-sm text-center font-light">(Select up to 4 interests)</p>
+    
+    <div className="flex justify-center mt-4">
+    <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+      {categories.map(category => (
+        <label className="label" key={category}>
+          <input
+            type="checkbox"
+            className="toggle"
+            checked={interests.includes(category)}
+            onChange={() => handleInterestToggle(category)}
+          />
+          {category}
+        </label>
+      ))}
+      
+        <div className="flex justify-center mt-2">
+        <button onClick={handleSave} className="btn btn-info btn-s">Save</button>
         </div>
-        <button onClick={handleSave}>Save</button>
+    </fieldset>
     </div>
-  );
+
+    <div className="flex justify-center mt-30">
+        <Link to="/profile" className="btn btn-primary">Back to Profile</Link>
+    </div>
+  </div>
+);
 }
 
 export default PersonalizationPage;
