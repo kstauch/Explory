@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import topImg from "../../assets/ExploryBackground.png";
 
 function StartPage() {
   const navigate = useNavigate();

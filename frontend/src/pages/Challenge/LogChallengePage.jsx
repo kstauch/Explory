@@ -97,6 +97,11 @@ function LogChallengePage() {
           },
           body: JSON.stringify({challenge_title: todaysChallenge.title})
         });
+        if (updateData.status === 409) {
+            alert("Awesome post! However, you already got your points for today's challenge. Returning to home!");
+            navigate('/home');
+            return; // Stops the rest of the code from running
+        }
         const completeData = await updateData.json();
 
         if (completeData.success) { //saving the amount of points and streak
