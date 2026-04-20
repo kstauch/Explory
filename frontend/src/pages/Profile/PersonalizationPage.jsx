@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function PersonalizationPage() {
   const navigate = useNavigate();
-  const categories = ['Cooking', 'Nature', 'Personal health', 'Relationship', 'Misc'];
+  const categories = ['Adventure', 'Learning', 'Food', 'Creative', 'Nightlife', 'Social', 'Wellness', 'Skills'];
   const [interests, setInterest] = useState([]);
 
   useEffect(() => {
