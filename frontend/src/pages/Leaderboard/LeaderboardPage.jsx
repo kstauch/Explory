@@ -40,12 +40,7 @@ function FriendsPage() {
 
 
 
-  const listToRender = activeTab === "friends"
-    ? friends
-    : globalUsers.filter(globalUser =>
-        globalUser.username === username ||
-        !friends.some(friend => friend.username === globalUser.username)
-      );
+  const listToRender = activeTab === "friends" ? friends : globalUsers;
   return (
     <div className="relative min-h-screen px-6">
         <div className="join grid grid-cols-2">
@@ -53,7 +48,7 @@ function FriendsPage() {
             onClick={() => setActiveTab("friends")}
             className={`join-item btn ${activeTab === "friends" ? "btn-active" : "btn-outline"}`}
             >
-            Friend's Leaderboard
+            Friends Leaderboard
             </button>
             <button
                 onClick={() => setActiveTab("global")}
@@ -63,19 +58,14 @@ function FriendsPage() {
             </button>
            </div>
 
-      {/* Back Arrow */}
-      <button onClick={() => navigate("/profile")} className="pt-15 pl-4 cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-          <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
-        </svg>
-      </button>
-
       {/* Title */}
-      <h1 className="mt-10 text-center text-lg font-bold">{username}'s Friends Leaderboard</h1>
+    <h1 className="mt-10 text-center text-lg font-bold">
+        {activeTab === "friends" ? `${username}'s Friends Leaderboard` : "Global Leaderboard"}
+    </h1>
 
       {/* Dynamic Leaderboard List */}
       <div className="mt-6">
-        <ul className="bg-base-100 rounded-box shadow-md max-h-96 overflow-y-auto divide-y border border-base-300">
+        <ul className="bg-base-100 rounded-box shadow-md max-h-[70vh] overflow-y-auto divide-y border border-base-300">
 
           {listToRender.length === 0 ? (
             <li className="p-8 text-center opacity-60 font-medium">No users found!</li>
