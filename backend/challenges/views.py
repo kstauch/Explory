@@ -19,5 +19,6 @@ def get_todays_challenge(request):
         data.append({
             'id': userc.challenge.id,
             'title': userc.challenge.title,
+            'description': userc.challenge.description,
             'completed': userc.completed})
     return Response({'challengeslist': data}, status=status.HTTP_200_OK)

@@ -27,19 +27,27 @@ def register_view(request):
 def random_challenge(request):
     user_interest = request.user.interests
     today = date.today()
+    # Check if they already rolled a challenge today
     existing_today = UserChallenges.objects.filter(user=request.user, date=today).first()
     if existing_today:
-        return JsonResponse({"daily_challenge": existing_today.challenge.title})
+        return JsonResponse({
+            "daily_challenge": existing_today.challenge.title,
+            "description": existing_today.challenge.description
+        })
+    # Otherwise, roll a new one
     if user_interest:
-        challenge = Challenges.objects.filter(category__in = user_interest).order_by('?').first()
+        challenge = Challenges.objects.filter(category__in=user_interest).order_by('?').first()
+        if not challenge:
+            challenge = Challenges.objects.order_by('?').first()
     else:
         challenge = Challenges.objects.order_by('?').first()
-
     if challenge is None:
-        return JsonResponse({'error': 'no categories to choose from for this user'}, status = 404)
+        return JsonResponse({'error': 'No challenges exist in the database yet.'}, status=404)
 
-    return JsonResponse({"daily_challenge": challenge.title})
-
+    return JsonResponse({
+        "daily_challenge": challenge.title,
+        "description": challenge.description
+    })
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -47,13 +55,18 @@ def random_challenge(request):
 def reroll_challenge(request):
     user_interest = request.user.interests
     if user_interest:
-        challenge = Challenges.objects.filter(category__in = user_interest).order_by('?').first()
+        challenge = Challenges.objects.filter(category__in=user_interest).order_by('?').first()
+        if not challenge:
+            challenge = Challenges.objects.order_by('?').first()
     else:
         challenge = Challenges.objects.order_by('?').first()
     if challenge is None:
-        return JsonResponse({'error: no categories to choose from for this user'}, status = 404)
+        return JsonResponse({'error': 'No challenges exist in the database yet.'}, status=404)
 
-    return JsonResponse({"daily_challenge": challenge.title})
+    return JsonResponse({
+        "daily_challenge": challenge.title,
+        "description": challenge.description
+    })
 
 
 @api_view(['POST', 'GET'])
@@ -71,7 +84,7 @@ def update_interests(request):
 @permission_classes([IsAuthenticated])
 def log_challenge(request):
     challenge_title = request.data.get('challenge_title')
-    print("Received title:", challenge_title)  # add this
+    print("Received title:", challenge_title)
     print("All challenges:", list(Challenges.objects.values('title')))
     challenge = Challenges.objects.get(title=challenge_title)
     user_challenge, created = (UserChallenges.objects.get_or_create
