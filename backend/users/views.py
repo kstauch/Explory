@@ -45,6 +45,7 @@ def random_challenge(request):
         return JsonResponse({'error': 'No challenges exist in the database yet.'}, status=404)
 
     return JsonResponse({
+        "id": challenge.id,
         "daily_challenge": challenge.title,
         "description": challenge.description
     })
@@ -100,35 +101,45 @@ def log_challenge(request):
 @authentication_classes([TokenAuthentication])
 def complete_challenge(request):
     challenge_title = request.data.get('challenge_title')
-    print("challenge_title received:", challenge_title)
-    print("last_completion_date:", request.user.last_completion_date)
-    print("today:", date.today())
+
+    # 1. First, find the base challenge from the database
     try:
-        user_challenge = UserChallenges.objects.get(user=request.user, challenge__title=challenge_title)
-        print("user_challenge found:", user_challenge)
-        print("already completed?", user_challenge.completed)
-    except UserChallenges.DoesNotExist:
-        return Response({'error': 'Challenge does not exist.'}, status=404)
-    if user_challenge.completed:
+        challenge = Challenges.objects.get(title=challenge_title)
+    except Challenges.DoesNotExist:
+        return Response({'error': 'Base challenge does not exist.'}, status=404)
+
+    # 2. Get the user's specific challenge log, or CREATE it if it's missing!
+    user_challenge, created = UserChallenges.objects.get_or_create(
+        user=request.user,
+        challenge=challenge,
+        defaults={'completed': False, 'date': date.today()}
+    )
+
+    if not created and user_challenge.completed:
         return Response({'error': 'Challenge already completed.'}, status=409)
+
+    # 3. Your original streak logic remains exactly the same
     today = date.today()
     yesterday = today - timedelta(days=1)
-    if request.user.last_completion_date ==  yesterday:
-        request.user.streak_count += 1
-        print("streak continued")
 
+    if request.user.last_completion_date == yesterday:
+        request.user.streak_count += 1
     elif request.user.last_completion_date == today:
-        print("already completed today, skipping")
         pass
     else:
         request.user.streak_count = 1
-        print("streak reset")
+
     user_challenge.completed = True
     user_challenge.save()
     request.user.total_points += user_challenge.challenge.points
     request.user.last_completion_date = date.today()
     request.user.save()
-    return Response({'success': True, 'streak': request.user.streak_count, 'total_points': request.user.total_points}, status = 200)
+
+    return Response({
+        'success': True,
+        'streak': request.user.streak_count,
+        'total_points': request.user.total_points
+    }, status=200)
 
 
 @api_view(['POST'])

@@ -41,18 +41,16 @@ function LogChallengePage() {
       const fetchChallengeData = async () => {
           const token = localStorage.getItem('token');
           try {
+              // 🔧 FIXED TYPO: ensure this is /users/ (as previously discussed, the other fetch was to /challenges/)
               const challengeRes = await fetch('http://localhost:8000/users/api/random-challenge/', {
                   headers: { Authorization: `Token ${token}`}
                   });
               const challengeData = await challengeRes.json();
-              const todayRes = await fetch('http://localhost:8000/challenges/api/todays-challenge/', {
-                  headers: { Authorization: `Token ${token}` }
-                  });
-              const todayData = await todayRes.json();
-              const challengeId = todayData.challengeslist?.[0]?.id;
+
+              // 🔧 CRITICAL FIX: Changed challengeId to challengeData.id
               setTodaysChallenge({
                   title: challengeData.daily_challenge,
-                  id: challengeId
+                  id: challengeData.id  // 🔧 Pulled from successfully parsed JSON
                   });
               } catch (err) {
                   console.error("Error fetching challenge data:", err);
@@ -75,8 +73,8 @@ function LogChallengePage() {
         console.log("FILE:", file);
         console.log("TITLE:", title);
         console.log("BODY:", body);
-        console.log("CHALLENGE:", todaysChallenge[0]);
-        console.log("CHALLENGE ID:", todaysChallenge[0]?.id);
+        console.log("CHALLENGE:", todaysChallenge);
+        console.log("CHALLENGE ID:", todaysChallenge.id);
         const postResponse = await fetch('http://localhost:8000/posts/api/create/', {
             method: 'POST',
             headers: {authorization: `Token ${token}`},
@@ -148,8 +146,6 @@ function LogChallengePage() {
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
                 ></textarea>
-
-                {/* Submit uses your original handleSubmit logic! */}
                 <button
                   className="btn btn-primary w-full mt-4"
                   onClick={handleSubmit}
