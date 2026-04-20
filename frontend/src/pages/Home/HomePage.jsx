@@ -47,7 +47,9 @@ return (
 
       <div className="mt-30">
         <div className="absolute bg-primary" style={{ height: '4%', top: '84%', left: 0, right: 0 }}></div>
-        <p className="relative z-10 mt-20 text-xl font-semibold px-2 mb-2">Explore Friend's Recent Activities</p>
+        <p className="relative z-10 mt-20 text-2xl font-semibold pl-4 mb-2">
+          Explore Friend Activities
+        </p>
 
         {friendPosts.length === 0 ? (
           <p className="text-center opacity-60 mt-4">Looks like your friends haven't posted yet!</p>
