@@ -3,6 +3,7 @@ from django.conf import settings
 from challenges.models import UserChallenges, Challenges
 
 #makes it so posts take in a user, title, challenge, image, body, and date
+#and also allows for it to delete cleanly
 class Post(models.Model):
     title = models.CharField(max_length=75)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

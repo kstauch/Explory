@@ -17,7 +17,7 @@ class Challenges(models.Model):
 
 # UserChallenges are all the challenges that are tied to a certain user
 # it takes in user, challenge, whether its completed, when they got the challenge, and how many points
-# its worth
+# its worth, it then limits it to one challenge a day based on user
 class UserChallenges(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE)

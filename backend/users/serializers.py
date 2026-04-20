@@ -16,7 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'total_points', 'profile_picture', 'bio', 'streak_count']
 
-#turns a Django Post object into JSON with those fields
+#turns a Django Post object into JSON with those fields so that it could transfer
+#data between Django and React
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.username')
     class Meta:

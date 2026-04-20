@@ -3,19 +3,19 @@ import { useState, useEffect } from 'react';
 import upload from "../../assets/upload.jpg";
 
 function ChallengePage() {
-  const navigate = useNavigate();
-  const [challenge, setChallenge] = useState({
-    title: 'Loading your challenge...',
-    description: '',
+  const navigate = useNavigate(); //allows for us to reuse logic to go to other pages
+  const [challenge, setChallenge] = useState({ //lets us send challenges to be saved
+    title: 'Loading your challenge...', //in the backend and has what is written as the default when nothing
+    description: '', //is there
     id: null,
     completed: false
   });
 
   const fetchChallenge = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // gets the user's token
     try {
       const challengeRes = await fetch('http://127.0.0.1:8000/users/api/random-challenge/', {
-        headers: { Authorization: `Token ${token}` }
+        headers: { Authorization: `Token ${token}` } //makes sure that the user is allowed to be there and access random challenge
       });
       const challengeData = await challengeRes.json();
 
@@ -29,10 +29,10 @@ function ChallengePage() {
         headers: { Authorization: `Token ${token}` }
       });
       const todayData = await todayRes.json();
-      const todayChallenge = todayData.challengeslist?.[0];
+      const todayChallenge = todayData.challengeslist?.[0]; //get the user's challenge of the day
 
-      setChallenge({
-        title: challengeData.daily_challenge,
+      setChallenge({ //changes the state of default challenge to have the challenge name, description
+        title: challengeData.daily_challenge, //id and completion status
         description: challengeData.description,
         id: todayChallenge?.id ?? null,
         completed: todayChallenge?.completed ?? false
@@ -47,15 +47,15 @@ function ChallengePage() {
     try {
       const res = await fetch('http://127.0.0.1:8000/users/api/reroll/', {
         method: 'GET',
-        headers: { Authorization: `Token ${token}` }
+        headers: { Authorization: `Token ${token}` } //goes to the backend and runs reroll challenge
       });
       const data = await res.json();
 
-      if (!res.ok || !data.daily_challenge) {
-        console.error("Failed to reroll challenge:", data);
+      if (!res.ok || !data.daily_challenge) { //error checking to see if it got a response and if there is a daily
+        console.error("Failed to reroll challenge:", data); //challenge
         return;
       }
-      setChallenge(prev => ({
+      setChallenge(prev => ({ //overrides the current title and description
         ...prev,
         title: data.daily_challenge,
         description: data.description
