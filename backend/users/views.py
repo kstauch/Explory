@@ -307,9 +307,10 @@ def profile(request):
         user.save()
         return Response({'success': True})
 
-#finds all friend relations and then makes a users friended to the user
-#then finds posts for each person in our list and gets a JSON of friend posts
-# then returns the JSON
+#finds all friend relations and then filters by which friend relations includes the user
+#after that it makes a list of friend objects that are the users who are not the user in those friend relations
+#then it finds posts for each person in our list and orders them by date before turning it into
+#a JSON and returning it as data the front end can handle
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])

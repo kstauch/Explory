@@ -8,6 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 function LogChallengePage() {
   const navigate = useNavigate();
+  //all these below are things that will get sent to the backend to be saved/changed
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [todaysChallenge, setTodaysChallenge] = useState({ title: "", id: null });
@@ -17,7 +18,7 @@ function LogChallengePage() {
   const imageUpload = (selectedFile) => {
     if (!selectedFile) return;
     setFile(selectedFile);
-    setPreviewUrl(URL.createObjectURL(selectedFile));
+    setPreviewUrl(URL.createObjectURL(selectedFile)); //so that you can see what image you have selected
   };
 
 
@@ -72,7 +73,7 @@ function LogChallengePage() {
 
       const token = localStorage.getItem('token');
       const postResponse = await fetch('http://localhost:8000/posts/api/create/', {
-        method: 'POST',
+        method: 'POST', //makes a post object that is attached to a specific user
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json'
@@ -92,7 +93,7 @@ function LogChallengePage() {
           method: 'POST',
           headers: {
             'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json' //updating the streak and points for the user but it does not get saved yet
           },
           body: JSON.stringify({challenge_title: todaysChallenge.title})
         });
@@ -103,7 +104,7 @@ function LogChallengePage() {
         }
         const completeData = await updateData.json();
 
-        if (completeData.success) {
+        if (completeData.success) { //saving the amount of points and streak
           localStorage.setItem('streak_count', completeData.streak);
           localStorage.setItem('total_points', completeData.total_points);
           navigate('/home');

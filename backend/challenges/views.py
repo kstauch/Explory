@@ -8,7 +8,8 @@ from .models import Challenges, UserChallenges
 from datetime import date
 
 #finds all the users challenges today which should be just 1 and returns
-# its id, title, description, and completion status
+# its id, title, description, and completion status then it sends
+# the server a list of all of today's challenges (which should be one)
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])

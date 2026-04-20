@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate
 
 User = get_user_model()
-
+#when people go to home or challenge.html it sends a request for the website to render and display
 def homepage(request):
     return render(request, 'home.html')
 def about(request):
@@ -16,7 +16,8 @@ def about(request):
 def test_api(request):
     return JsonResponse({"message": "Backend is working"})
 
-#Creates new users and assigns a token to them
+#Creates new users and assigns a token to them and also turns their data
+#into JSON so that it can be processed by react
 class UserViewer(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -33,7 +34,8 @@ class UserViewer(generics.CreateAPIView):
         }, status=201)
 
 #checks to see if the combination of username and password exist in our database
-#then it gets the token once it finds that user
+#then it gets the token once it finds that user and returns our username, id, and token
+#as a JSON
 class LoginView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
 

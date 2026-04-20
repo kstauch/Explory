@@ -12,7 +12,7 @@ from challenges.models import Challenges, UserChallenges
 #if you're logged, grab image, title, challenge_id, and body
 #then filters through all the user challenges until they find the one that
 #matches the other one's challenge_id and then creates a post with
-#all the data
+#all the data and then returns the ID of the post
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])

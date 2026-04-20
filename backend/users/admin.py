@@ -12,10 +12,11 @@ class CustomUserAdmin(UserAdmin):
     )
     list_display = ['username', 'email', 'total_points', 'streak_count', 'is_staff']
 
+#adds user, challenge, completion status, and date as fields that we can edit as an admin
 class ChallengesAdmin(admin.ModelAdmin):
     list_display = ['user', 'challenge', 'completed', 'date']
 
-
+#adds all of the models into Django's admin page
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Challenges)
 admin.site.register(UserChallenges, ChallengesAdmin)

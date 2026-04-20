@@ -12,23 +12,23 @@ function PersonalizationPage() {
     const token = localStorage.getItem("token");
     fetch("http://127.0.0.1:8000/users/api/user-preference/", {
         headers: {'Content-Type': 'application/json',
-            Authorization: `Token ${token}`},
+            Authorization: `Token ${token}`}, //goes to update interests to get a list of all of th euser interests
     })
         .then((response) => response.json())
         .then((data) => {
             console.log("fetched interests:", data.interests);
             if (data.interests && data.interests.length > 0) {
-                setInterest(data.interests);
+                setInterest(data.interests); // if the user has at least 1 interest it sets the interest and allows it to be saved
             }
         });
 },[]);
 
   const handleInterestToggle = (category) =>{
       if(interests.includes(category)){
-          setInterest(interests.filter(c => c !== category));
-      }
+          setInterest(interests.filter(c => c !== category)); //filter the categories to be checked if the user
+      } //has that as one of their interests
       else{
-        if (interests.length >= 4) {
+        if (interests.length >= 4) { //limits it to only four interests at a time
         return;
         }
           setInterest([...interests, category]);
@@ -39,8 +39,8 @@ function PersonalizationPage() {
       fetch('http://127.0.0.1:8000/users/api/user-preference/',
           { method : 'POST', headers : {'Content-Type': 'application/json',
                   Authorization : `Token ${token}`},
-          body: JSON.stringify({interests : interests})
-      })
+          body: JSON.stringify({interests : interests})  //save the new interests the user has selected
+      })//then turn them into a string so that they can be used
       .then(res => res.json())
       .then(data => {
           if(data.success === true){
