@@ -29,11 +29,13 @@ function HomePage() {
     }, [])
   return (
     <div>
-      <div className="flex justify-between items-center mt-10 pl-2 pr-10">
+    <div className="flex flex-col mt-10 pl-2 pr-10">
       <h1 className="text-3xl font-semibold">Welcome, {username}!</h1>
-      <button onClick={() => navigate("/challenge")} className="btn btn-success btn-wide font-light text-lg">
-        See Today's Challenge
-      </button>
+      <div className="flex justify-center mt-10">
+        <button onClick={() => navigate("/challenge")} className="btn btn-ghost btn-neutral btn-wide font-light text-lg">
+          See Today's Challenge
+        </button>
+      </div>
     </div>
 
       

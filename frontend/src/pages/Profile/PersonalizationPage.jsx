@@ -53,8 +53,15 @@ function PersonalizationPage() {
   };
     console.log(interests);
   return (
-  <div>
-    <h1 className="mt-16 text-center text-lg font-bold">Your Personalization</h1>
+    
+  <div className="relative min-h-screen px-6">
+      <button onClick={() => navigate("/profile")} className="pt-15 pl-4 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+        </svg>
+      </button>
+    <h1 className="mt-10
+     text-center text-lg font-bold">Your Personalization</h1>
     <p className="mt-3 text-base text-center font-normal">Select your interests so that we can match you with the best Explory Activities for you!</p>
     <p className="text-sm text-center font-light">(Select up to 4 interests)</p>
     
@@ -78,9 +85,6 @@ function PersonalizationPage() {
     </fieldset>
     </div>
 
-    <div className="flex justify-center mt-30">
-        <Link to="/profile" className="btn btn-primary">Back to Profile</Link>
-    </div>
   </div>
 );
 }
