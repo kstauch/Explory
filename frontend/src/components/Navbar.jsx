@@ -4,7 +4,7 @@ export default function Navbar() {
   const closeMenu = () => document.activeElement.blur();
 
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-100 shadow-sm z-50">
       <div className="px-3 navbar-start flex items-center gap-1">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">

@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/complete-challenge/', views.complete_challenge, name='complete_challenge'),
 
     path('api/profile/', views.profile, name='profile'),
+    path('api/friends/posts/', views.get_friend_posts, name='friend_posts'),
 ]
