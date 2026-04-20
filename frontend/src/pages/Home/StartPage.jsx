@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import topImg from "../../assets/ExploryBackground.png";
 
 function StartPage() {
   const navigate = useNavigate();
@@ -52,10 +53,14 @@ function StartPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-6">
-      <h1 className="text-4xl font-bold">Welcome to Explory!</h1>
-      <p className="text-base opacity-60">Your daily activity companion</p>
-
+    <div >
+      <div className="relative flex flex-col overflow-hidden" style={{ height: '500px' }}>
+      <img src={topImg} className="w-full h-full object-cover" style={{ objectPosition: 'center 70%' }} alt="background" />
+      </div>
+    
+      <h1 className="mt-10 text-4xl font-bold text-center">Welcome to Explory!</h1>
+      <p className="text-base opacity-60 text-center">Your daily activity companion</p>
+      
       <div className="flex justify-center gap-4 mt-4">
         <button
           className="btn btn-primary btn-wide"
@@ -70,7 +75,6 @@ function StartPage() {
           Register
         </button>
       </div>
-
       {/* Login Modal */}
       <dialog id="login_modal" className="modal">
         <div className="modal-box">
