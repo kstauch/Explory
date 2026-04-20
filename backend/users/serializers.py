@@ -14,7 +14,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'total_points', 'profile_picture', 'bio']
+        fields = ['id', 'username', 'total_points', 'profile_picture', 'bio', 'streak_count']
 
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.username')

@@ -20,9 +20,9 @@ urlpatterns = [
     path('api/friends/remove/<int:friend_id>/', views.remove_friend, name='remove_friend'),
     path('api/leaderboard/friends/', views.get_friends_leaderboard, name='friends_leaderboard'),
     path('api/leaderboard/global/', views.get_global_leaderboard, name='global_leaderboard'),
+    path('api/leaderboard/streaks/', views.get_streaks_leaderboard, name='streaks_leaderboard'),
     path('api/upload-challenge/', views.upload_photo, name='upload_photo'),
     path('api/complete-challenge/', views.complete_challenge, name='complete_challenge'),
-
     path('api/profile/', views.profile, name='profile'),
     path('api/friends/posts/', views.get_friend_posts, name='friend_posts'),
 ]

@@ -20,6 +20,14 @@ def register_view(request):
     return render(request, "users/register.html",
                   {"form": form})
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_streaks_leaderboard(request):
+    all_users = User.objects.all().order_by('-streak_count')
+    leaderboard_data = UserSerializer(all_users, many=True)
+    return Response(leaderboard_data.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
