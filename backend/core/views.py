@@ -16,6 +16,7 @@ def about(request):
 def test_api(request):
     return JsonResponse({"message": "Backend is working"})
 
+#Creates new users and assigns a token to them
 class UserViewer(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -30,7 +31,9 @@ class UserViewer(generics.CreateAPIView):
             'user' : serializer.data,
             'token': token.key,
         }, status=201)
-    
+
+#checks to see if the combination of username and password exist in our database
+#then it gets the token once it finds that user
 class LoginView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
 

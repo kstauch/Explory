@@ -7,7 +7,7 @@ function PersonalizationPage() {
   const navigate = useNavigate();
   const categories = ['Adventure', 'Learning', 'Food', 'Creative', 'Nightlife', 'Social', 'Wellness', 'Skills'];
   const [interests, setInterest] = useState([]);
-
+    //gets the user's interests and if they do save the ones already stored and have a max of 4 interests at a time
   useEffect(() => {
     const token = localStorage.getItem("token");
     fetch("http://127.0.0.1:8000/users/api/user-preference/", {

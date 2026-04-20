@@ -77,7 +77,9 @@ def reroll_challenge(request):
         "description": challenge.description
     })
 
-
+#if we are trying to get interests it returns all of the saved user interests
+#if not it will make an interests list with [] as its default and save the new interests
+#the user has selected
 @api_view(['POST', 'GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -88,7 +90,9 @@ def update_interests(request):
     request.user.save()
     return JsonResponse({'success': True})
 
-
+#gets the title of the challenge, then finds what challenge matches the title
+#then makes a user challenge with the user, challenge, date, and completion status
+#which is default false
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def log_challenge(request):
@@ -274,7 +278,7 @@ def get_global_leaderboard(request):
 
     return Response(leaderboard_data.data, status=status.HTTP_200_OK)
 
-
+#gets the file of the image and saves it as the challenge image
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -302,7 +306,9 @@ def profile(request):
         user.save()
         return Response({'success': True})
 
-
+#finds all friend relations and then makes a users friended to the user
+#then finds posts for each person in our list and gets a JSON of friend posts
+# then returns the JSON
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])

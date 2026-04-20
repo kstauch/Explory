@@ -8,8 +8,11 @@ from .models import Post
 from challenges.models import Challenges, UserChallenges
 
 
-# Create your views here.
 
+#if you're logged, grab image, title, challenge_id, and body
+#then filters through all the user challenges until they find the one that
+#matches the other one's challenge_id and then creates a post with
+#all the data
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -31,6 +34,7 @@ def make_post(request):
     except UserChallenges.DoesNotExist:
         return Response ({'success':False}, status=400)
 
+#gets all the posts by date converts them into JSON and then returns each post
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])

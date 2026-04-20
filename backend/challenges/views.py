@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from .models import Challenges, UserChallenges
 from datetime import date
 
-
+#finds all the users challenges today which should be just 1 and returns
+# its id, title, description, and completion status
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
