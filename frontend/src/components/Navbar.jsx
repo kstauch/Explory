@@ -29,7 +29,7 @@ export default function Navbar() {
         <span className="text-2xl font-bold">Explory</span>
       </div>
       <div className="navbar-end px-3">
-        <Link to="/challenge" className="btn btn-primary btn-sm">Today's Challenge</Link>
+        <Link to="/challenge" className="btn btn-secondary btn-sm opacity-80">Today's Challenge</Link>
       </div>
     </div>
   );

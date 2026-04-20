@@ -9,6 +9,7 @@ body {
 
 [data-theme] {
   --color-primary: var(--color-base-300);
+  --color-secondary: #479478;
 }
 
 #root {
