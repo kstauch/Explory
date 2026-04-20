@@ -63,7 +63,7 @@ function FriendRequestsPage() {
                 <div className="flex items-center gap-4">
                 <img
                     className="w-10 h-10 rounded-full object-cover"
-                    src={req.sender.profile_picture ? `http://127.0.0.1:8000${req.sender.profile_picture}` : DEFAULT_PIC}
+                    src={req.sender.profile_picture || DEFAULT_PIC}
                     alt={req.sender_username}
                 />
                   <span className="font-semibold">{req.sender_username}</span>

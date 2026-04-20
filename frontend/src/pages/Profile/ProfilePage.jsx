@@ -1,5 +1,10 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const DEFAULT_PIC = "https://www.nicepng.com/png/detail/128-1280406_view-user-icon-png-user-circle-icon-png.png";
 
@@ -26,7 +31,7 @@ function ProfilePage() {
       .then((data) => {
         setUsername(data.username);
         setBio(data.bio || "");
-        setProfilePicture(data.profile_picture ? `http://127.0.0.1:8000${data.profile_picture}` : DEFAULT_PIC);
+        setProfilePicture(data.profile_picture || DEFAULT_PIC);
       });
   };
 
@@ -46,19 +51,43 @@ function ProfilePage() {
     });
   };
 
-  const handleSavePicture = () => {
+const handleSavePicture = async () => {
+    if (!newPicture) return;
     const token = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("profile_picture", newPicture);
-    fetch("http://127.0.0.1:8000/users/api/profile/", {
-      method: "POST",
-      headers: { Authorization: `Token ${token}` },
-      body: formData,
-    }).then(() => {
-      setProfilePicture(URL.createObjectURL(newPicture));
-      setNewPicture(null);
-      document.getElementById("picture_modal").close();
-    });
+
+    try {
+      const fileExt = newPicture.name.split('.').pop();
+      const fileName = `${username}-${Date.now()}.${fileExt}`;
+      const filePath = `profiles/${fileName}`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('Explory Media')
+        .upload(filePath, newPicture);
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('Explory Media')
+        .getPublicUrl(filePath);
+
+      const response = await fetch("http://127.0.0.1:8000/users/api/profile/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        },
+        body: JSON.stringify({ profile_picture: publicUrl }),
+      });
+
+      if (response.ok) {
+        setProfilePicture(publicUrl);
+        setNewPicture(null);
+        document.getElementById("picture_modal").close();
+      } else {
+        console.error("Failed to update Django profile.");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
 
   return (
@@ -66,7 +95,7 @@ function ProfilePage() {
       <div className="card bg-base-100 shadow-sm w-[28rem] min-h-[32rem]">
         <figure className="w-48 h-48 shrink-0 p-2">
           <img
-            src={profilePicture}
+            src={profilePicture || DEFAULT_PIC}
             alt="Profile"
             className="w-full h-full object-cover rounded-full" />
         </figure>

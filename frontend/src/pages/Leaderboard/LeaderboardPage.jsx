@@ -93,7 +93,7 @@ function FriendsPage() {
                 >
                   <img
                     className="w-12 h-12 rounded-full object-cover shadow-sm"
-                    src={user.profile_picture ? `http://127.0.0.1:8000${user.profile_picture}` : DEFAULT_PIC}
+                    src={user.profile_picture || DEFAULT_PIC}
                     alt={user.username}
                   />
 

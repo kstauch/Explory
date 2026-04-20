@@ -82,7 +82,7 @@ function FriendsPage() {
               <li key={friend.id} className="flex items-center gap-4 p-4">
                 <img
                   className="w-10 h-10 rounded-full object-cover"
-                  src={friend.profile_picture ? `http://127.0.0.1:8000${friend.profile_picture}` : DEFAULT_PIC}
+                  src={friend.profile_picture || DEFAULT_PIC}
                   alt={friend.username} />
                 <Link to="/archive" className="font-semibold hover:underline">{friend.username}</Link>
               </li>
@@ -109,7 +109,10 @@ function FriendsPage() {
             {pendingRequests.slice(0, 4).map((req) => (
               <div className="avatar" key={req.id}>
                 <div className="w-12">
-                  <img src={req.sender.profile_picture ? `http://127.0.0.1:8000${req.sender.profile_picture}` : DEFAULT_PIC} alt={req.sender_username} />
+                  <img
+                    src={req.sender.profile_picture || DEFAULT_PIC}
+                    alt={req.sender_username}
+                  />
                 </div>
               </div>
             ))}

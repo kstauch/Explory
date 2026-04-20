@@ -1,28 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import React, {useEffect, useState} from "react";
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 function LogChallengePage() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const imageUpload = async (selectedFile) => {
-      if (!selectedFile) return;
-      setFile(selectedFile);
-      setPreviewUrl(URL.createObjectURL(selectedFile));
-      const formData = new FormData();
-      formData.append('challengeimage', selectedFile);
-      const token = localStorage.getItem('token');
-      try {
-          const response = await fetch('http://localhost:8000/users/api/upload-challenge/', {
-        method: 'POST',
-        headers: { authorization: `Token ${token}` },
-        body: formData
-      });
-      const data = await response.json();
-      console.log("Initial Image Upload Data:", data);
-    } catch (err) {
-      console.error("Error uploading initial image:", err);
-    }
+  const [todaysChallenge, setTodaysChallenge] = useState({ title: "", id: null });
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
+  const imageUpload = (selectedFile) => {
+    if (!selectedFile) return;
+    setFile(selectedFile);
+    setPreviewUrl(URL.createObjectURL(selectedFile));
   };
 
 
@@ -36,69 +31,83 @@ function LogChallengePage() {
     const selectedFile = e.target.files[0];
     imageUpload(selectedFile);
   }
-  const [todaysChallenge, setTodaysChallenge] = useState({ title: "", id: null });
+
   useEffect(() => {
-      const fetchChallengeData = async () => {
-          const token = localStorage.getItem('token');
-          try {
-              // 🔧 FIXED TYPO: ensure this is /users/ (as previously discussed, the other fetch was to /challenges/)
-              const challengeRes = await fetch('http://localhost:8000/users/api/random-challenge/', {
-                  headers: { Authorization: `Token ${token}`}
-                  });
-              const challengeData = await challengeRes.json();
-
-              // 🔧 CRITICAL FIX: Changed challengeId to challengeData.id
-              setTodaysChallenge({
-                  title: challengeData.daily_challenge,
-                  id: challengeData.id  // 🔧 Pulled from successfully parsed JSON
-                  });
-              } catch (err) {
-                  console.error("Error fetching challenge data:", err);
-              }
-          };
-      fetchChallengeData();
-
-  }, []);
-    const [title, setTitle] = useState("");
-    const [body, setBody] = useState("");
-    const handleSubmit = async () => {
-        const challengeId = todaysChallenge.id;
-        const challengeTitle = todaysChallenge.title;
-        const token = localStorage.getItem('token');
-        const formData = new FormData();
-        formData.append('image', file);
-        formData.append('challenge', challengeId);
-        formData.append('title', title);
-        formData.append('body', body);
-        console.log("FILE:", file);
-        console.log("TITLE:", title);
-        console.log("BODY:", body);
-        console.log("CHALLENGE:", todaysChallenge);
-        console.log("CHALLENGE ID:", todaysChallenge.id);
-        const postResponse = await fetch('http://localhost:8000/posts/api/create/', {
-            method: 'POST',
-            headers: {authorization: `Token ${token}`},
-            body: formData
+    const fetchChallengeData = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const challengeRes = await fetch('http://localhost:8000/users/api/random-challenge/', {
+          headers: { Authorization: `Token ${token}`}
         });
-        const postData = await postResponse.json();
-        console.log("POST data:", postData);
+        const challengeData = await challengeRes.json();
 
-        if (postData.success) {
-            const updateData = await fetch('http://localhost:8000/users/api/complete-challenge/', {
-                method: 'POST', headers: {
-                    authorization: `Token ${token}`, 'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({challenge_title: challengeTitle})
-            });
-            const completeData = await updateData.json();
-            console.log("COMPLETE CHALLENGE:", completeData);
-            if (completeData.success) {
-                localStorage.setItem('streak_count', completeData.streak);
-                localStorage.setItem('total_points', completeData.total_points);
-                navigate('/home');
-            }
+        setTodaysChallenge({
+          title: challengeData.daily_challenge,
+          id: challengeData.id
+        });
+      } catch (err) {
+        console.error("Error fetching challenge data:", err);
+      }
+    };
+    fetchChallengeData();
+  }, []);
+
+    const handleSubmit = async () => {
+    if (!file || !todaysChallenge.id) return;
+
+    try { // uploads file directly to Supabase storage bucket
+      const fileExt = file.name.split('.').pop();
+      const fileName = `post-${todaysChallenge.id}-${Date.now()}.${fileExt}`;
+      const filePath = `posts/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('Explory Media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('Explory Media')
+        .getPublicUrl(filePath);
+
+      const token = localStorage.getItem('token');
+      const postResponse = await fetch('http://localhost:8000/posts/api/create/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          challenge: todaysChallenge.id,
+          title: title,
+          body: body,
+          image: publicUrl
+        })
+      });
+
+      const postData = await postResponse.json();
+
+      if (postData.success) {
+        const updateData = await fetch('http://localhost:8000/users/api/complete-challenge/', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({challenge_title: todaysChallenge.title})
+        });
+        const completeData = await updateData.json();
+
+        if (completeData.success) {
+          localStorage.setItem('streak_count', completeData.streak);
+          localStorage.setItem('total_points', completeData.total_points);
+          navigate('/home');
         }
+      }
+    } catch (err) {
+      console.error("Error during submission:", err);
     }
+  };
 
 
   return (

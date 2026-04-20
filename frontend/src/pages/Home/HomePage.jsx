@@ -59,7 +59,7 @@ return (
                 className={`absolute inset-0 transition-opacity duration-300 ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               >
                 <img
-                  src={`http://127.0.0.1:8000${post.image}`}
+                  src={post.image}
                   className="w-full h-full object-cover"
                   alt={post.title}
                 />

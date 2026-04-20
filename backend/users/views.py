@@ -301,8 +301,9 @@ def profile(request):
     if request.method == 'POST':
         user = request.user
         user.bio = request.data.get('bio', user.bio)
-        if 'profile_picture' in request.FILES:
-            user.profile_picture = request.FILES['profile_picture']
+        profile_pic_url = request.data.get('profile_picture')
+        if profile_pic_url:
+            user.profile_picture = profile_pic_url
         user.save()
         return Response({'success': True})
 

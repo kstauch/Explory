@@ -18,7 +18,7 @@ from challenges.models import Challenges, UserChallenges
 @permission_classes([IsAuthenticated])
 def make_post(request):
     print(request.data)
-    image = request.FILES.get('image')
+    image_url = request.data.get('image')
     title = request.data.get('title')
     challenge_id = request.data.get('challenge')
     body = request.data.get('body')
@@ -29,7 +29,8 @@ def make_post(request):
             user = request.user,
             title=title,
             challenge=user_challenge,
-            body=body,image=image)
+            body=body,
+            image=image_url)
         return Response ({'success':True, 'post_id':post.id}, status=201)
     except UserChallenges.DoesNotExist:
         return Response ({'success':False}, status=400)
@@ -46,7 +47,7 @@ def get_posts(request):
         'user': post.user.username,
         'challenge': post.challenge.title,
         'body': post.body,
-        'image': post.image.url if post.image else None,
+        'image': post.image if post.image else None,
     }
     for post in posts
     ]
