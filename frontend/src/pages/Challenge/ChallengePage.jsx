@@ -91,7 +91,7 @@ function ChallengePage() {
     <div className="w-full bg-base-100">
       <div className="flex flex-col items-center pt-16 pb-20 px-4 text-center">
         <h1 className="mb-4 text-4xl font-bold">Today's Challenge</h1>
-        <p className="mb-8 text-2xl text-primary font-semibold">{challenge.title}</p>
+        <p className="mb-8 text-2xl text-secondary font-semibold">{challenge.title}</p>
         <p className="mb-2 text-lg">{challenge.description || 'Description not available'}</p>
         <div className="flex justify-center gap-4 w-full">
           <button className="btn btn-outline" onClick={reroll_challenge}>Reroll</button>

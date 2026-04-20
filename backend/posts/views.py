@@ -52,3 +52,20 @@ def get_posts(request):
     for post in posts
     ]
     return Response({'success':True, 'data':data}, status=200)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_my_posts(request):
+    posts = Post.objects.filter(user=request.user).order_by('-date')
+    data = [{
+        'id': post.id,
+        'title': post.title,
+        'user': post.user.username,
+        'challenge': post.challenge.challenge.title if post.challenge else '',
+        'body': post.body,
+        'image': post.image if post.image else None,
+    }
+    for post in posts
+    ]
+    return Response({'success': True, 'data': data}, status=200)
