@@ -39,6 +39,7 @@ function ChallengePage() {
       setChallenge(newChallenge);
       localStorage.setItem('rolled_challenge_title', challengeData.daily_challenge);
       localStorage.setItem('rolled_challenge_id', todayChallenge?.id ?? '');
+      localStorage.setItem('rolled_challenge_description', challengeData.description ?? '');
       setHasRolled(true);
       document.getElementById('challenge_modal').showModal();
     } catch (err) {
@@ -62,6 +63,8 @@ function ChallengePage() {
         description: data.description
       }));
       localStorage.setItem('rolled_challenge_title', data.daily_challenge);
+      localStorage.setItem('rolled_challenge_description', data.description ?? '');
+    
     } catch (err) {
       console.error("Error rerolling challenge:", err);
     }
@@ -70,8 +73,9 @@ function ChallengePage() {
 useEffect(() => {
     const savedTitle = localStorage.getItem('rolled_challenge_title');
     const savedId = localStorage.getItem('rolled_challenge_id');
+    const savedDescription = localStorage.getItem('rolled_challenge_description');
     if (savedTitle) {
-      setChallenge(prev => ({ ...prev, title: savedTitle, id: savedId }));
+      setChallenge(prev => ({ ...prev, title: savedTitle, id: savedId, description: savedDescription }));
       setHasRolled(true);
     }
 
@@ -100,78 +104,83 @@ useEffect(() => {
   }, []);
 
 return (
-    <div className="w-full bg-base-100">
-      <div className="flex flex-col items-center pt-16 pb-20 px-4 text-center">
-        <h1 className="mb-4 text-4xl font-bold">Today's Challenge</h1>
+    <div>
+      {/* Colored header section */}
+      <div className="mt-8 bg-warning/90 w-full h-[70px] flex flex-col items-center justify-center px-4 text-center">
+        <h1 className="text-white text-4xl font-light">Today's Challenge</h1>
+      </div>
 
-        {challenge.completed ? (
-          <>
-            <p className="text-lg text-primary font-semibold mb-4">Challenge completed for the day. Come back tomorrow!</p>
-            <p className="text-5xl font-bold text-secondary mb-2">{challenge.title}</p>
-            <p className="text-base opacity-70">{challenge.description}</p>
-            
-          </>
-        ) : (
+      {/* Rest of content */}
+      <div className="w-full bg-base-100">
+        <div className="flex flex-col items-center pt-10 pb-20 px-4 text-center">
+          {challenge.completed ? (
+            <>
+              <p className="text-lg text-secondary font-semibold mb-4">Come back tomorrow! Challenge completed for the day:</p>
+              <p className="text-5xl font-bold text-warning mb-4">{challenge.title}</p>
+              <p className="text-base opacity-70">{challenge.description}</p>
+            </>
+          ) : (
             <>
               <div className="flex justify-center gap-4 w-full mb-6">
                 <button
                   className="btn btn-accent btn-xs"
                   onClick={hasRolled ? () => document.getElementById('challenge_modal').showModal() : fetchChallenge}
                 >
-                  Roll My Challenge
+                  Reveal My Challenge
                 </button>
               </div>
               {isPicked && challenge.title && (
                 <div>
-                  <p className="text-5xl font-bold text-secondary mb-2">{challenge.title}</p>
+                  <p className="text-5xl font-bold text-warning mb-2">{challenge.title}</p>
                   <p className="text-base opacity-70">{challenge.description}</p>
                 </div>
               )}
             </>
-        )}
+          )}
+        </div>
+
+        {/* Challenge Modal */}
+        <dialog id="challenge_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-2xl mb-2">{challenge.title}</h3>
+            <p className="text-base opacity-70">{challenge.description}</p>
+            <div className="modal-action">
+              <button className="btn btn-outline" onClick={reroll_challenge}>Reroll</button>
+              <form method="dialog">
+                <button className="btn btn-primary" onClick={() => setIsPicked(true)}>Pick Challenge</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+
+        <div className="hero min-h-[75vh]" style={{ backgroundImage: `url(${upload})` }}>
+          <div className="hero-overlay bg-opacity-70"></div>
+          <div className="hero-content text-neutral-content text-center">
+            <div className="max-w-md">
+              <h1 className="mb-5 text-4xl font-bold">Ready to upload?</h1>
+              <p className="mb-5">Get started for the day! Upload your completed challenge here</p>
+              <button className="btn btn-accent" onClick={() => {
+                if (challenge.completed) {
+                  document.getElementById('completed_modal').showModal();
+                } else {
+                  navigate("/log-challenge");
+                }
+              }}>Upload Challenge</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Challenge Completed Modal */}
+        <dialog id="completed_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-2xl mb-2">Challenge Completed!</h3>
+            <p className="text-base opacity-70">Come back tomorrow!</p>
+            <div className="modal-action">
+              <form method="dialog"><button className="btn">Close</button></form>
+            </div>
+          </div>
+        </dialog>
       </div>
-
-      {/* Challenge Modal */}
-      <dialog id="challenge_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-2xl mb-2">{challenge.title}</h3>
-          <p className="text-base opacity-70">{challenge.description || 'Description not available'}</p>
-          <div className="modal-action">
-            <button className="btn btn-outline" onClick={reroll_challenge}>Reroll</button>
-            <form method="dialog">
-              <button className="btn btn-primary" onClick={() => setIsPicked(true)}>Pick Challenge</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-
-      <div className="hero min-h-[75vh]" style={{ backgroundImage: `url(${upload})` }}>
-        <div className="hero-overlay bg-opacity-70"></div>
-        <div className="hero-content text-neutral-content text-center">
-          <div className="max-w-md">
-            <h1 className="mb-5 text-4xl font-bold">Ready to upload?</h1>
-            <p className="mb-5">Get started for the day! Upload your completed challenge here</p>
-            <button className="btn btn-accent" onClick={() => {
-              if (challenge.completed) {
-                document.getElementById('completed_modal').showModal();
-              } else {
-                navigate("/log-challenge");
-              }
-            }}>Upload Challenge</button>
-          </div>
-        </div>
-      </div>
-
-      {/* Challenge Completed Modal */}
-      <dialog id="completed_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-2xl mb-2">Challenge Completed!</h3>
-          <p className="text-base opacity-70">Challenge completed for the day. Come back tomorrow!</p>
-          <div className="modal-action">
-            <form method="dialog"><button className="btn">Close</button></form>
-          </div>
-        </div>
-      </dialog>
     </div>
   );
 }
