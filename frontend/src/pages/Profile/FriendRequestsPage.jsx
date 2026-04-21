@@ -64,9 +64,9 @@ function FriendRequestsPage() {
                 <img
                     className="w-10 h-10 rounded-full object-cover"
                     src={req.sender.profile_picture || DEFAULT_PIC}
-                    alt={req.sender_username}
+                    alt={req.sender.username}
                 />
-                  <span className="font-semibold">{req.sender_username}</span>
+                  <span className="font-semibold">{req.sender.username}</span>
                 </div>
                 <div>
                   {accepted.includes(req.id) ? (
