@@ -38,6 +38,19 @@ function FriendsPage() {
   };
 
   const handleSendRequest = () => {
+    // checks for adding users you're already friends with (or yourself)
+    const isAlreadyFriend = friends.some(
+      (friend) => friend.username.toLowerCase() === newFriendUsername.toLowerCase()
+    );
+    if (isAlreadyFriend) {
+      setAddFriendMessage(`${newFriendUsername} is already in your friends list!`);
+      return;
+    }
+    if (newFriendUsername.toLowerCase() === username.toLowerCase()) {
+       setAddFriendMessage("You can't send a friend request to yourself.");
+       return;
+    }
+
     const token = localStorage.getItem("token");
     fetch("http://127.0.0.1:8000/users/api/friends/request/send/", {
       method: "POST",
@@ -54,8 +67,7 @@ function FriendsPage() {
           setNewFriendUsername("");
           document.getElementById("add_friend_modal").close();
         } else {
-          setAddFriendMessage(data.error || "Something went wrong.");
-          document.getElementById("add_friend_modal").close();
+          setAddFriendMessage(data.error || "User does not exist or request failed.");
         }
       });
   };
@@ -144,7 +156,7 @@ function FriendsPage() {
                 <div className="w-12">
                   <img
                     src={req.sender.profile_picture || DEFAULT_PIC}
-                    alt={req.sender_username}
+                    alt={req.sender.username}
                   />
                 </div>
               </div>
@@ -167,6 +179,9 @@ function FriendsPage() {
             value={newFriendUsername}
             onChange={(e) => setNewFriendUsername(e.target.value)}
           />
+          {addFriendMessage && (
+            <p className="text-sm text-red-600 mt-2 font-medium">{addFriendMessage}</p>
+          )}
           <div className="modal-action">
             <button className="btn btn-primary" onClick={handleSendRequest}>Send Request</button>
             <form method="dialog">
