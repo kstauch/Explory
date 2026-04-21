@@ -58,7 +58,7 @@ function MyExploryPage() {
                 className="w-full h-full object-cover"
                 alt={post.title}
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-neutral p-2">
+              <div className="absolute bottom-0 left-0 right-0 bg-black p-2">
                 <p className="text-sm font-bold text-white">{post.user}</p>
                 <p className="text-xs font-semibold text-white">{post.title}</p>
                 <p className="text-xs text-white opacity-80">{post.body}</p>

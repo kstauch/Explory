@@ -88,7 +88,7 @@ function LogChallengePage() {
         });
         if (updateData.status === 409) {
           alert("Awesome post! However, you already got your points for today's challenge. Returning to home!");
-          navigate('/home');
+          navigate('/explory');
           return;
         }
         const completeData = await updateData.json();
@@ -96,7 +96,7 @@ function LogChallengePage() {
         if (completeData.success) {
           localStorage.setItem('streak_count', completeData.streak);
           localStorage.setItem('total_points', completeData.total_points);
-          navigate('/home');
+          navigate('/explory');
         }
       }
     } catch (err) {
@@ -109,7 +109,7 @@ function LogChallengePage() {
 
       {/* HEADER */}
       <div className="w-full max-w-4xl flex justify-between mb-4 px-4">
-        <h1 className="text-3xl font-bold">Log Today's Challenge</h1>
+        <h1 className="text-3xl font-bold">Log Today's Challenge:</h1>
         <button className="btn btn-outline" onClick={() => navigate("/challenge")}>
           Back to Challenge
         </button>
@@ -117,7 +117,7 @@ function LogChallengePage() {
 
       {/* CHALLENGE TITLE */}
       <div className="w-full max-w-4xl px-4 mb-8">
-        <p className="text-xl font-semibold text-primary">{todaysChallenge.title || "Loading challenge..."}</p>
+        <p className="text-3xl font-semibold text-secondary">{todaysChallenge.title || "Loading challenge..."}</p>
       </div>
 
       {previewUrl ? (
@@ -130,7 +130,7 @@ function LogChallengePage() {
           <div className="hero-content text-neutral-content text-center w-full">
             <div className="card w-full max-w-md bg-base-100/90 backdrop-blur-md text-base-content shadow-xl p-6">
               <h2 className="text-2xl font-bold mb-2">Ready to post?</h2>
-              <p className="text-primary font-semibold mb-6">
+              <p className="text-secondary font-semibold mb-6">
                 {todaysChallenge.title || "Loading challenge..."}
               </p>
               <div className="form-control w-full gap-4">
@@ -168,7 +168,7 @@ function LogChallengePage() {
         /* === STATE 1: DRAG AND DROP ZONE === */
         <div className="w-full max-w-3xl mt-4 flex flex-col items-center">
           <p className="text-base-content/70 mb-6 text-lg text-center">
-            Drop your photo for <span className="font-bold text-primary">{todaysChallenge.title || "today's challenge"}</span> right here
+            Drop your photo and add a caption right here!
           </p>
           <label
             onDragOver={(e) => e.preventDefault()}
