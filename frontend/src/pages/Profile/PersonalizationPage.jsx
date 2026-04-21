@@ -45,6 +45,7 @@ function PersonalizationPage() {
       .then(data => {
           if(data.success === true){
               alert("User saved successfully");
+              navigate("/profile")
           }
           else{
               alert("User saved failed");
