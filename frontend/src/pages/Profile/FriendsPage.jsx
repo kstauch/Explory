@@ -10,6 +10,7 @@ function FriendsPage() {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [newFriendUsername, setNewFriendUsername] = useState("");
   const [addFriendMessage, setAddFriendMessage] = useState("");
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -59,6 +60,29 @@ function FriendsPage() {
       });
   };
 
+  const handleRemoveFriend = async (friendId, friendUsername) => {
+    if (!window.confirm(`Are you sure you want to remove ${friendUsername} from your friends list?`)) return;
+
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/users/api/friends/remove/${friendId}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setFriends(friends.filter(f => f.id !== friendId));
+        document.getElementById("friend_detail_modal").close();
+      } else {
+        console.error("Failed to remove friend. status:", res.status);
+      }
+    } catch (error) {
+      console.error("Error removing friend:", error);
+    }
+  };
+
   return (
     <div className="relative min-h-screen px-6">
 
@@ -84,7 +108,16 @@ function FriendsPage() {
                   className="w-10 h-10 rounded-full object-cover"
                   src={friend.profile_picture || DEFAULT_PIC}
                   alt={friend.username} />
-                <Link to="/archive" className="font-semibold hover:underline">{friend.username}</Link>
+                {/* Shows friend's details when clicking on username */}
+                <button
+                    className="font-semibold hover:text-primary hover:underline text-left cursor-pointer"
+                    onClick={() => {
+                    setSelectedFriend(friend);
+                    document.getElementById("friend_detail_modal").showModal();
+                  }}
+                >
+                  {friend.username}
+                </button>
               </li>
             ))
           )}
@@ -142,6 +175,41 @@ function FriendsPage() {
           </div>
         </div>
       </dialog>
+
+      {/* Friend Detail Modal */}
+      <dialog id="friend_detail_modal" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box flex flex-col items-center text-center">
+
+          {/* only renders contents if a friend has been selected */}
+          {selectedFriend && (
+            <>
+              <img
+                className="w-24 h-24 rounded-full object-cover shadow-md mb-4"
+                src={selectedFriend.profile_picture || DEFAULT_PIC}
+                alt={selectedFriend.username}
+              />
+              <h3 className="font-bold text-2xl">{selectedFriend.username}</h3>
+              <p className="py-4 text-base-content/80 max-w-sm">
+                {selectedFriend.bio || "This user hasn't written a bio yet."}
+              </p>
+
+              <div className="modal-action w-full flex justify-between mt-4">
+                <button
+                  className="btn btn-error"
+                  onClick={() => handleRemoveFriend(selectedFriend.id, selectedFriend.username)}
+                >
+                  Remove Friend
+                </button>
+
+                <form method="dialog">
+                  <button className="btn">Close</button>
+                </form>
+              </div>
+            </>
+          )}
+        </div>
+      </dialog>
+
     </div>
   );
 }
